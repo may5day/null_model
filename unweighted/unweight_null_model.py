@@ -4,7 +4,7 @@ Created on Wed Apr 19 20:42:23 2017
 revised on Oct 15 2017
 @author:xiaoke   
 """
-
+# add a note
 import networkx as nx
 import random
 import copy
