@@ -2,9 +2,9 @@
 """
 Created on Wed Apr 19 20:42:23 2017
 revised on Oct 15 2017
-@author:xiaoke   
+@author:xiaoke
 """
-# add a note
+
 import networkx as nx
 import random
 import copy
@@ -14,13 +14,14 @@ selfloop:config_model\random_1k
 
 
 def dict_degree_nodes(degree_node_list):
+	# to be edited...
     # 返回的字典为{度：[节点1，节点2，..]}，其中节点1和节点2有相同的度
     D = {}
-    for degree_node_i in degree_node_list:
-        if degree_node_i[0] not in D:
-            D[degree_node_i[0]] = [degree_node_i[1]]
+    for n in degree_node_list:
+        if n[0] not in D:
+            D[n[0]] = [n[1]]
         else:
-            D[degree_node_i[0]].append(degree_node_i[1])
+            D[n[0]].append(n[1])
     return D
 
 
