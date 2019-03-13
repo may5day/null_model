@@ -16,9 +16,35 @@ __all__ = ['dict_degree_nodes',
            'random_graph_model']
 
 
-def dict_degree_nodes(degree_node_list):
-    # to be edited...
-    # 返回的字典为{度：[节点1，节点2，..]}，其中节点1和节点2有相同的度
+def count_degree_nodes(degree_nodes):
+    """Count nodes with the same degree
+
+    Parameters
+    ----------
+    degree_nodes : list
+        a list contains nodes and degree [[degree,node]]
+
+    Notes
+    -----
+
+    Returns
+    -------
+    a dict contains nodes and degree {degree:[node1,node2...]}
+    where node1 and node2 have the same degree
+
+    Examples
+    --------
+    >>> from unweighted_null_model import count_degree_node
+    >>> n_list = [[1,2],[1,3],[2,4],[2,5]]
+    >>> count_degree_node(n_list)
+    ... {1: [2, 3], 2: [4, 5]}
+
+    See also
+    --------
+
+    References
+    ----------
+    """
     D = {}
     for n in degree_node_list:
         if n[0] not in D:
@@ -29,13 +55,13 @@ def dict_degree_nodes(degree_node_list):
 
 
 def random_graph_model(G):
-    """Return a random graph  G_{n,p} (Erdős-Rényi graph, binomial graph).
+    """Create a random graph G_{n,p} (Erdős-Rényi graph, binomial graph).
 
     Chooses each of the possible edges with probability p.
 
     Parameters
     ----------
-    G : NetworkX graph
+    G : undirected and unweighted graph
     n : int
         The number of nodes.
     p : float
@@ -50,6 +76,7 @@ def random_graph_model(G):
 
     Returns
     -------
+    a Erdős-Rényi graph
 
     See also
     --------
