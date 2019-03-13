@@ -12,9 +12,12 @@ import copy
 selfloop:config_model\random_1k
 """
 
+__all__ = ['dict_degree_nodes',
+           'random_graph_model']
+
 
 def dict_degree_nodes(degree_node_list):
-	# to be edited...
+    # to be edited...
     # 返回的字典为{度：[节点1，节点2，..]}，其中节点1和节点2有相同的度
     D = {}
     for n in degree_node_list:
@@ -25,12 +28,42 @@ def dict_degree_nodes(degree_node_list):
     return D
 
 
-def ER_model(G0):
-    n = len(G0.nodes())
-    m = len(G0.edges())
+def random_graph_model(G):
+    """Return a random graph  G_{n,p} (Erdős-Rényi graph, binomial graph).
+
+    Chooses each of the possible edges with probability p.
+
+    Parameters
+    ----------
+    G : NetworkX graph
+    n : int
+        The number of nodes.
+    p : float
+        Probability for edge creation.
+    directed : bool, optional (default=False)
+        If True return a directed graph
+
+    Notes
+    -----
+    The G_{n,p} graph algorithm chooses each of the [n(n-1)]/2
+    (undirected) or n(n-1) (directed) possible edges with probability p.
+
+    Returns
+    -------
+
+    See also
+    --------
+
+    References
+    ----------
+    .. [1] P. Erdős and A. Rényi, On Random Graphs, Publ. Math. 6, 290 (1959).
+    .. [2] E. N. Gilbert, Random Graphs, Ann. Math. Stat., 30, 1141 (1959).
+    """
+
+    n = len(G.nodes())
+    m = len(G.edges())
     p = 2.0 * m / (n * n)
-    G = nx.random_graphs.erdos_renyi_graph(n, p, directed=False)
-    return G
+    return nx.random_graphs.erdos_renyi_graph(n, p, directed=False)
 
 
 def config_model(G0):
