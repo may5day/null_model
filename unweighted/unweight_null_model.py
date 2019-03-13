@@ -45,6 +45,7 @@ def count_degree_nodes(degree_nodes):
     References
     ----------
     """
+
     D = {}
     for n in degree_node_list:
         if n[0] not in D:
