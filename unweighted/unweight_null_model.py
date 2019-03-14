@@ -12,7 +12,7 @@ import copy
 selfloop:config_model\random_1k
 """
 
-__all__ = ['dict_degree_nodes',
+__all__ = ['count_degree_nodes',
            'random_graph_model']
 
 
@@ -46,13 +46,13 @@ def count_degree_nodes(degree_nodes):
     ----------
     """
 
-    D = {}
-    for n in degree_node_list:
-        if n[0] not in D:
-            D[n[0]] = [n[1]]
+    degree_dict = {}
+    for n_d in degree_nodes:
+        if n_d[0] not in degree_dict:
+            degree_dict[n_d[0]] = [n_d[1]]
         else:
-            D[n[0]].append(n[1])
-    return D
+            degree_dict[n_d[0]].append(n_d[1])
+    return degree_dict
 
 
 def random_graph_model(G):
@@ -96,8 +96,7 @@ def random_graph_model(G):
 
 def config_model(G0):
     degree_seq = list(G0.degree().values())
-    G = nx.configuration_model(degree_seq)
-    return G
+    return nx.configuration_model(degree_seq)
 
 
 def random_0k(G0, nswap=1, max_tries=100, connected=1):
