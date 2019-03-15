@@ -37,13 +37,7 @@ def count_degree_nodes(degree_nodes):
     >>> from unweighted_null_model import count_degree_node
     >>> n_list = [[1,2],[1,3],[2,4],[2,5]]
     >>> count_degree_node(n_list)
-    ... {1: [2, 3], 2: [4, 5]}
-
-    See also
-    --------
-
-    References
-    ----------
+    ... {1: [2, 3], 2: [4, 5]}s
     """
 
     degree_dict = {}
@@ -79,9 +73,6 @@ def random_graph_model(G):
     -------
     a Erdős-Rényi graph
 
-    See also
-    --------
-
     References
     ----------
     .. [1] P. Erdős and A. Rényi, On Random Graphs, Publ. Math. 6, 290 (1959).
@@ -94,8 +85,16 @@ def random_graph_model(G):
     return nx.random_graphs.erdos_renyi_graph(n, p, directed=False)
 
 
-def config_model(G0):
-    degree_seq = list(G0.degree().values())
+def config_model(G):
+    """Returns a random bipartite graph from the given graph
+
+    Parameters
+    ----------
+    G : undirected and unweighted graph
+    degree_seq : list
+        Degree sequence of the given graph G
+    """
+    degree_seq = list(G.degree().values())
     return nx.configuration_model(degree_seq)
 
 
