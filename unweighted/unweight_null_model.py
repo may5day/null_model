@@ -50,7 +50,7 @@ def count_degree_nodes(degree_nodes):
 
 
 def random_graph_model(G):
-    """Create a random graph G_{n,p} (Erdős-Rényi graph, binomial graph).
+    """Return a random graph G_{n,p} (Erdős-Rényi graph, binomial graph).
 
     Chooses each of the possible edges with probability p.
 
@@ -68,10 +68,6 @@ def random_graph_model(G):
     -----
     The G_{n,p} graph algorithm chooses each of the [n(n-1)]/2
     (undirected) or n(n-1) (directed) possible edges with probability p.
-
-    Returns
-    -------
-    a Erdős-Rényi graph
 
     References
     ----------
@@ -99,13 +95,29 @@ def config_model(G):
 
 
 def random_0k(G0, nswap=1, max_tries=100, connected=1):
+	"""Return a 0K null model by break edges and reconnect
+
+    Parameters
+    ----------
+    G0 : undirected and unweighted graph
+    nswap : int (default = 1)
+        xx
+    max_tries : int (default = 100)
+        zxxx
+    connected : int
+        keep the connectivity of the graph or not.
+        1:keep,    0:not keep
+    
+    Notes
+    -----
+    The 0K null models have the same average node degree as the original graph
+	"""
     # 基于随机断边重连的0阶零模型
     # G0：待改变结构的网络
     # node_community_list：是网络中节点的社团归属信息
     # nswap：是改变成功的系数，默认值为1
     # max_tries：是尝试改变的次数，默认值为100
     # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
-
     if G0.is_directed():
         raise nx.NetworkXError("It is only allowed for undirected networks")
     if nswap > max_tries:
@@ -154,6 +166,15 @@ def random_1k(G0, nswap=1, max_tries=100, connected=1):
     # nswap：是改变成功的系数，默认值为1
     # max_tries：是尝试改变的次数，默认值为100
     # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
+    """
+
+    Notes
+    -----
+     the 1K null
+models require reproducing the original graph’s node degree
+distribution.
+
+    """
 
     if not nx.is_connected(G0):
         raise nx.NetworkXError("非连通图，必须为连通图")
@@ -207,6 +228,13 @@ def random_1k(G0, nswap=1, max_tries=100, connected=1):
 
 
 def random_2k(G0, nswap=1, max_tries=100, connected=1):
+	"""
+
+    Notes
+    -----
+     the 2K null models have the same joint degree distribution as the original graph
+
+    """
     # 保证2k特性不变和网络联通的情况下，交换社团内部的连边
     # G0：待改变结构的网络
     # nswap：是改变成功的系数，默认值为1
@@ -267,6 +295,19 @@ def random_2k(G0, nswap=1, max_tries=100, connected=1):
 
 
 def random_25k(G0, nswap=1, max_tries=100, connected=1):
+	"""
+
+    Notes
+    -----
+     The 2.25K and 2.5K null models
+have respectively the same average clustering coefficient and
+cluster spectrum as the original network with the same joint
+degree distribution.
+The 2.5K null models has the same clustering spectrum and joint degree distribution with the original network,
+which is of great significance for studying the clustering
+characteristics of the network.
+
+    """
     # 保证2.5k特性不变和网络联通的情况下，交换社团内部的连边
     # G0：待改变结构的网络
     # nswap：是改变成功的系数，默认值为1
@@ -348,6 +389,14 @@ def random_25k(G0, nswap=1, max_tries=100, connected=1):
 
 
 def random_3k(G0, nswap=1, max_tries=100, connected=1):
+	"""
+
+    Notes
+    -----
+     3K null model, which
+is considered interconnectivity among triples of nodes
+
+    """
     # 保证3k特性不变和网络联通的情况下，交换社团内部的连边
     # G0：待改变结构的网络
     # nswap：是改变成功的系数，默认值为1
