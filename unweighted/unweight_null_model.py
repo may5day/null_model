@@ -13,7 +13,13 @@ selfloop:config_model\random_1k
 """
 
 __all__ = ['count_degree_nodes',
-           'random_graph_model']
+           'er_graph',
+           'config_model',
+           'random_0k',
+           'random_1k',
+           'random_2k',
+           'random_25k',
+           'random_3k']
 
 
 def count_degree_nodes(degree_nodes):
@@ -39,7 +45,6 @@ def count_degree_nodes(degree_nodes):
     >>> count_degree_node(n_list)
     ... {1: [2, 3], 2: [4, 5]}s
     """
-
     degree_dict = {}
     for n_d in degree_nodes:
         if n_d[0] not in degree_dict:
@@ -49,7 +54,7 @@ def count_degree_nodes(degree_nodes):
     return degree_dict
 
 
-def random_graph_model(G):
+def er_graph(G):
     """Return a random graph G_{n,p} (Erdős-Rényi graph, binomial graph).
 
     Chooses each of the possible edges with probability p.
@@ -74,7 +79,6 @@ def random_graph_model(G):
     .. [1] P. Erdős and A. Rényi, On Random Graphs, Publ. Math. 6, 290 (1959).
     .. [2] E. N. Gilbert, Random Graphs, Ann. Math. Stat., 30, 1141 (1959).
     """
-
     n = len(G.nodes())
     m = len(G.edges())
     p = 2.0 * m / (n * n)
@@ -95,29 +99,28 @@ def config_model(G):
 
 
 def random_0k(G0, nswap=1, max_tries=100, connected=1):
-	"""Return a 0K null model by break edges and reconnect
+    """Return a 0K null model beased on random reconnection algorithm
 
     Parameters
     ----------
     G0 : undirected and unweighted graph
     nswap : int (default = 1)
-        xx
+        coefficient of change successfully
     max_tries : int (default = 100)
-        zxxx
+        number of changes
     connected : int
         keep the connectivity of the graph or not.
         1:keep,    0:not keep
-    
+
     Notes
     -----
     The 0K null models have the same average node degree as the original graph
-	"""
-    # 基于随机断边重连的0阶零模型
-    # G0：待改变结构的网络
-    # node_community_list：是网络中节点的社团归属信息
-    # nswap：是改变成功的系数，默认值为1
-    # max_tries：是尝试改变的次数，默认值为100
-    # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
+
+    See Also
+    --------
+    er_graph
+
+    """
     if G0.is_directed():
         raise nx.NetworkXError("It is only allowed for undirected networks")
     if nswap > max_tries:
@@ -161,18 +164,24 @@ def random_0k(G0, nswap=1, max_tries=100, connected=1):
 
 
 def random_1k(G0, nswap=1, max_tries=100, connected=1):
-    # 保证度分布特性不变的情况下随机交换连边
-    # G0：待改变结构的网络
-    # nswap：是改变成功的系数，默认值为1
-    # max_tries：是尝试改变的次数，默认值为100
-    # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
     """
+    Return a 1K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G0 : undirected and unweighted graph
+    nswap : int (default = 1)
+        coefficient of change successfully
+    max_tries : int (default = 100)
+        number of changes
+    connected : int
+        keep the connectivity of the graph or not.
+        1:keep,    0:not keep
 
     Notes
     -----
-     the 1K null
-models require reproducing the original graph’s node degree
-distribution.
+    The 1K null models require reproducing the original graph’s 
+    node degree distribution.
 
     """
 
@@ -228,19 +237,25 @@ distribution.
 
 
 def random_2k(G0, nswap=1, max_tries=100, connected=1):
-	"""
+	"""Return a 2K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G0 : undirected and unweighted graph
+    nswap : int (default = 1)
+        coefficient of change successfully
+    max_tries : int (default = 100)
+        number of changes
+    connected : int
+        keep the connectivity of the graph or not.
+        1:keep,    0:not keep
 
     Notes
     -----
-     the 2K null models have the same joint degree distribution as the original graph
+    The 2K null models have the same joint degree distribution as the original graph
 
     """
     # 保证2k特性不变和网络联通的情况下，交换社团内部的连边
-    # G0：待改变结构的网络
-    # nswap：是改变成功的系数，默认值为1
-    # max_tries：是尝试改变的次数，默认值为100
-    # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
-
     if not nx.is_connected(G0):
         raise nx.NetworkXError("非连通图，必须为连通图")
     if G0.is_directed():
@@ -295,25 +310,25 @@ def random_2k(G0, nswap=1, max_tries=100, connected=1):
 
 
 def random_25k(G0, nswap=1, max_tries=100, connected=1):
-	"""
+	"""Return a 2.5K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G0 : undirected and unweighted graph
+    nswap : int (default = 1)
+        coefficient of change successfully
+    max_tries : int (default = 100)
+        number of changes
+    connected : int
+        keep the connectivity of the graph or not.
+        1:keep,    0:not keep
 
     Notes
     -----
-     The 2.25K and 2.5K null models
-have respectively the same average clustering coefficient and
-cluster spectrum as the original network with the same joint
-degree distribution.
-The 2.5K null models has the same clustering spectrum and joint degree distribution with the original network,
-which is of great significance for studying the clustering
-characteristics of the network.
+    The 2.5K null models has the same clustering spectrum and joint degree distribution with the original network
 
     """
     # 保证2.5k特性不变和网络联通的情况下，交换社团内部的连边
-    # G0：待改变结构的网络
-    # nswap：是改变成功的系数，默认值为1
-    # max_tries：是尝试改变的次数，默认值为100
-    # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
-
     if not nx.is_connected(G0):
         raise nx.NetworkXError("非连通图，必须为连通图")
     if G0.is_directed():
@@ -389,20 +404,25 @@ characteristics of the network.
 
 
 def random_3k(G0, nswap=1, max_tries=100, connected=1):
-	"""
+	"""Return a 3K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G0 : undirected and unweighted graph
+    nswap : int (default = 1)
+        coefficient of change successfully
+    max_tries : int (default = 100)
+        number of changes
+    connected : int
+        keep the connectivity of the graph or not.
+        1:keep,    0:not keep
 
     Notes
     -----
-     3K null model, which
-is considered interconnectivity among triples of nodes
+    3K null model, which is considered interconnectivity among triples of nodes
 
     """
     # 保证3k特性不变和网络联通的情况下，交换社团内部的连边
-    # G0：待改变结构的网络
-    # nswap：是改变成功的系数，默认值为1
-    # max_tries：是尝试改变的次数，默认值为100
-    # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
-
     if not nx.is_connected(G0):
         raise nx.NetworkXError("非连通图，必须为连通图")
     if G0.is_directed():
