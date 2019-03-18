@@ -30,9 +30,6 @@ def count_degree_nodes(degree_nodes):
     degree_nodes : list
         a list contains nodes and degree [[degree,node]]
 
-    Notes
-    -----
-
     Returns
     -------
     a dict contains nodes and degree {degree:[node1,node2...]}
@@ -136,18 +133,24 @@ def random_0k(G0, nswap=1, max_tries=100, connected=1):
     nodes = G.nodes()
     while swapcount < nswap:
         n = n + 1
-        u, v = random.choice(edges)  # 随机选网络中的一条要断开的边
-        x, y = random.sample(nodes, 2)  # 随机找两个不相连的节点
+        # choose a edge randomly
+        u, v = random.choice(edges)
+        # choose two nodes which are not connected
+        x, y = random.sample(nodes, 2)
         if len(set([u, v, x, y])) < 4:
             continue
         if (x, y) not in edges and (y, x) not in edges:
-            G.remove_edge(u, v)  # 断旧边
-            G.add_edge(x, y)  # 连新边
+            # cut the origin edge
+            G.remove_edge(u, v)
+            # connect the new edge
+            G.add_edge(x, y)
             edges.remove((u, v))
             edges.append((x, y))
 
-            if connected == 1:  # 判断是否需要保持联通特性，为1的话则需要保持该特性
-                if not nx.is_connected(G):  # 保证网络是全联通的:若网络不是全联通网络，则撤回交换边的操作
+            if connected == 1:
+                if not nx.is_connected(G):
+                    # if connected=1 but the origin graph is not connected fully,
+                    # withdraw the operation about the exchange of edges.
                     G.add_edge(u, v)
                     G.add_edge(x, y)
                     G.remove_edge(u, y)
@@ -180,7 +183,7 @@ def random_1k(G0, nswap=1, max_tries=100, connected=1):
 
     Notes
     -----
-    The 1K null models require reproducing the original graph’s 
+    The 1K null models require reproducing the original graph’s
     node degree distribution.
 
     """
