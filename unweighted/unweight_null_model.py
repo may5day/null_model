@@ -95,13 +95,13 @@ def config_model(G):
     return nx.configuration_model(degree_seq)
 
 
-def random_0k(G0, nswap=1, max_tries=100, connected=1):
+def random_0k(G0, n_swap=1, max_tries=100, connected=1):
     """Return a 0K null model beased on random reconnection algorithm
 
     Parameters
     ----------
     G0 : undirected and unweighted graph
-    nswap : int (default = 1)
+    n_swap : int (default = 1)
         coefficient of change successfully
     max_tries : int (default = 100)
         number of changes
@@ -119,20 +119,20 @@ def random_0k(G0, nswap=1, max_tries=100, connected=1):
 
     """
     if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected networks")
-    if nswap > max_tries:
+        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+    if n_swap > max_tries:
         raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
-        raise nx.NetworkXError("Graph has less than three nodes.")
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
     G = copy.deepcopy(G0)
 
-    n = 0
-    swapcount = 0
+    n_try = 0
+    count_swap = 0
     edges = G.edges()
     nodes = G.nodes()
-    while swapcount < nswap:
-        n = n + 1
+    while count_swap < n_swap:
+        n_try = n_try + 1
         # choose a edge randomly
         u, v = random.choice(edges)
         # choose two nodes which are not connected
@@ -149,31 +149,31 @@ def random_0k(G0, nswap=1, max_tries=100, connected=1):
 
             if connected == 1:
                 if not nx.is_connected(G):
-                    # if connected=1 but the origin graph is not connected fully,
-                    # withdraw the operation about the exchange of edges.
+                    # if connected = 1 but the origin graph is not connected fully,
+                    # withdraw the operation about the swap of edges.
                     G.add_edge(u, v)
                     G.add_edge(x, y)
                     G.remove_edge(u, y)
                     G.remove_edge(x, v)
                     continue
-            swapcount = swapcount + 1
+            count_swap = count_swap + 1
 
         if n >= max_tries:
             e = ('Maximum number of swap attempts (%s) exceeded ' %
-                 n + 'before desired swaps achieved (%s).' % nswap)
+                 n_try + 'before desired swaps achieved (%s).' % n_swap)
             print e
             break
     return G
 
 
-def random_1k(G0, nswap=1, max_tries=100, connected=1):
+def random_1k(G0, n_swap=1, max_tries=100, connected=1):
     """
     Return a 1K null model beased on random reconnection algorithm
 
     Parameters
     ----------
     G0 : undirected and unweighted graph
-    nswap : int (default = 1)
+    n_swap : int (default = 1)
         coefficient of change successfully
     max_tries : int (default = 100)
         number of changes
@@ -189,27 +189,27 @@ def random_1k(G0, nswap=1, max_tries=100, connected=1):
     """
 
     if not nx.is_connected(G0):
-        raise nx.NetworkXError("非连通图，必须为连通图")
+        raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
-        raise nx.NetworkXError("仅适用于无向图")
-    if nswap > max_tries:
-        raise nx.NetworkXError("交换次数超过允许的最大次数")
+        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+    if n_swap > max_tries:
+        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 4:
-        raise nx.NetworkXError("节点数太少，至少要含四个节点")
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
-    tn = 0  # 尝试次数
-    swapcount = 0  # 有效交换次数
+    n_try = 0
+    count_swap = 0
 
     G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while swapcount < nswap:  # 有效交换次数小于规定交换次数
-        if tn >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % tn + '有效交换次数（%s)' % swapcount)
+    while count_swap < n_swap:
+        if n_try >= max_tries:
+            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             print(e)
             break
-        tn += 1
+        n_try += 1
 
         # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -235,17 +235,17 @@ def random_1k(G0, nswap=1, max_tries=100, connected=1):
                         G.remove_edge(u, y)
                         G.remove_edge(x, v)
                         continue
-                swapcount = swapcount + 1
+                count_swap = count_swap + 1
     return G
 
 
-def random_2k(G0, nswap=1, max_tries=100, connected=1):
+def random_2k(G0, n_swap=1, max_tries=100, connected=1):
 	"""Return a 2K null model beased on random reconnection algorithm
 
     Parameters
     ----------
     G0 : undirected and unweighted graph
-    nswap : int (default = 1)
+    n_swap : int (default = 1)
         coefficient of change successfully
     max_tries : int (default = 100)
         number of changes
@@ -258,29 +258,30 @@ def random_2k(G0, nswap=1, max_tries=100, connected=1):
     The 2K null models have the same joint degree distribution as the original graph
 
     """
+
     # 保证2k特性不变和网络联通的情况下，交换社团内部的连边
     if not nx.is_connected(G0):
-        raise nx.NetworkXError("非连通图，必须为连通图")
+        raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
-        raise nx.NetworkXError("仅适用于无向图")
-    if nswap > max_tries:
-        raise nx.NetworkXError("交换次数超过允许的最大次数")
+        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+    if n_swap > max_tries:
+        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
-        raise nx.NetworkXError("节点数太少，至少要含三个节点")
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
-    tn = 0  # 尝试次数
-    swapcount = 0  # 有效交换次数
+    n_try = 0
+    count_swap = 0
 
     G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while swapcount < nswap:  # 有效交换次数小于规定交换次数
-        if tn >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % tn + '有效交换次数（%s)' % swapcount)
+    while count_swap < n_swap:
+        if n_try >= max_tries:
+            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             print(e)
             break
-        tn += 1
+        n_try += 1
 
         # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -308,17 +309,17 @@ def random_2k(G0, nswap=1, max_tries=100, connected=1):
                             G.remove_edge(u, y)
                             G.remove_edge(x, v)
                             continue
-                    swapcount = swapcount + 1
+                    count_swap = count_swap + 1
     return G
 
 
-def random_25k(G0, nswap=1, max_tries=100, connected=1):
+def random_25k(G0, n_swap=1, max_tries=100, connected=1):
 	"""Return a 2.5K null model beased on random reconnection algorithm
 
     Parameters
     ----------
     G0 : undirected and unweighted graph
-    nswap : int (default = 1)
+    n_swap : int (default = 1)
         coefficient of change successfully
     max_tries : int (default = 100)
         number of changes
@@ -333,27 +334,27 @@ def random_25k(G0, nswap=1, max_tries=100, connected=1):
     """
     # 保证2.5k特性不变和网络联通的情况下，交换社团内部的连边
     if not nx.is_connected(G0):
-        raise nx.NetworkXError("非连通图，必须为连通图")
+        raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
-        raise nx.NetworkXError("仅适用于无向图")
-    if nswap > max_tries:
-        raise nx.NetworkXError("交换次数超过允许的最大次数")
+        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+    if n_swap > max_tries:
+        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
-        raise nx.NetworkXError("节点数太少，至少要含三个节点")
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
-    tn = 0  # 尝试次数
-    swapcount = 0  # 有效交换次数
+    n_try = 0
+    count_swap = 0
 
     G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while swapcount < nswap:  # 有效交换次数小于规定交换次数
-        if tn >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % tn + '有效交换次数（%s)' % swapcount)
+    while count_swap < n_swap:
+        if n_try >= max_tries:
+            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             print(e)
             break
-        tn += 1
+        n_try += 1
 
         # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -402,17 +403,17 @@ def random_25k(G0, nswap=1, max_tries=100, connected=1):
                             G.remove_edge(x, v)
                             continue
 
-                    swapcount = swapcount + 1
+                    count_swap = count_swap + 1
     return G
 
 
-def random_3k(G0, nswap=1, max_tries=100, connected=1):
+def random_3k(G0, n_swap=1, max_tries=100, connected=1):
 	"""Return a 3K null model beased on random reconnection algorithm
 
     Parameters
     ----------
     G0 : undirected and unweighted graph
-    nswap : int (default = 1)
+    n_swap : int (default = 1)
         coefficient of change successfully
     max_tries : int (default = 100)
         number of changes
@@ -427,27 +428,27 @@ def random_3k(G0, nswap=1, max_tries=100, connected=1):
     """
     # 保证3k特性不变和网络联通的情况下，交换社团内部的连边
     if not nx.is_connected(G0):
-        raise nx.NetworkXError("非连通图，必须为连通图")
+        raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
-        raise nx.NetworkXError("仅适用于无向图")
-    if nswap > max_tries:
-        raise nx.NetworkXError("交换次数超过允许的最大次数")
+        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+    if n_swap > max_tries:
+        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
-        raise nx.NetworkXError("节点数太少，至少要含三个节点")
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
-    tn = 0  # 尝试次数
-    swapcount = 0  # 有效交换次数
+    n_try = 0
+    count_swap = 0
 
     G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while swapcount < nswap:  # 有效交换次数小于规定交换次数
-        if tn >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % tn + '有效交换次数（%s)' % swapcount)
+    while count_swap < n_swap:
+        if n_try >= max_tries:
+            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             print(e)
             break
-        tn += 1
+        n_try += 1
 
         # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -489,32 +490,32 @@ def random_3k(G0, nswap=1, max_tries=100, connected=1):
                             G.remove_edge(u, y)
                             G.remove_edge(x, v)
                             continue
-                    swapcount = swapcount + 1
+                    count_swap = count_swap + 1
     return G
 
 
-def rich_club_create(G0, k=1, nswap=1, max_tries=100, connected=1):
+def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1):
     """
     任选两条边(富节点和非富节点的连边)，若富节点间无连边，非富节点间无连边，则断边重连
     达到最大尝试次数或全部富节点间都有连边，循环结束
     """
     # G0：待改变结构的网络
-   # k 为富节点度值的门限值
-    # nswap：是改变成功的系数，默认值为1
+    # k 为富节点度值的门限值
+    # n_swap：是改变成功的系数，默认值为1
     # max_tries：是尝试改变的次数，默认值为100
     # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
 
     if not nx.is_connected(G0):
-        raise nx.NetworkXError("非连通图，必须为连通图")
+        raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
-        raise nx.NetworkXError("仅适用于无向图")
-    if nswap > max_tries:
-        raise nx.NetworkXError("交换次数超过允许的最大次数")
+        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+    if n_swap > max_tries:
+        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
-        raise nx.NetworkXError("节点数太少，至少要含三个节点")
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
-    tn = 0  # 尝试次数
-    swapcount = 0  # 有效交换次数
+    n_try = 0
+    count_swap = 0
 
     G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
@@ -525,12 +526,12 @@ def rich_club_create(G0, k=1, nswap=1, max_tries=100, connected=1):
         e[1]] >= k]  # 网络中已有的富节点和富节点的连边
     len_possible_edges = len(hubs) * (len(hubs) - 1) / 2  # 全部富节点间都有连边的边数
 
-    while swapcount < nswap and len(hubs_edges) < len_possible_edges:
-        if tn >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % tn + '有效交换次数（%s)' % swapcount)
+    while count_swap < n_swap and len(hubs_edges) < len_possible_edges:
+        if n_try >= max_tries:
+            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             print(e)
             break
-        tn += 1
+        n_try += 1
 
         u, y = random.sample(hubs, 2)  # 任选两个富节点
         v = random.choice(list(G[u]))
@@ -556,14 +557,14 @@ def rich_club_create(G0, k=1, nswap=1, max_tries=100, connected=1):
                     hubs_edges.remove((u, y))
                     continue
 
-        if tn >= max_tries:
-            print('Maximum number of attempts (%s) exceeded ' % tn)
+        if n_try >= max_tries:
+            print('Maximum number of attempts (%s) exceeded ' % n_try)
             break
-        swapcount = swapcount + 1
+        count_swap = count_swap + 1
     return G
 
 
-def rich_club_break(G0, k=10, nswap=1, max_tries=100, connected=1):
+def rich_club_break(G0, k=10, n_swap=1, max_tries=100, connected=1):
     """
     富边：富节点和富节点的连边
     非富边：非富节点和非富节点的连边
@@ -572,21 +573,21 @@ def rich_club_break(G0, k=10, nswap=1, max_tries=100, connected=1):
     """
     # G0：待改变结构的网络
    # k 为富节点度值的门限值
-    # nswap：是改变成功的系数，默认值为1
+    # n_swap：是改变成功的系数，默认值为1
     # max_tries：是尝试改变的次数，默认值为100
     # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
 
     if not nx.is_connected(G0):
-        raise nx.NetworkXError("非连通图，必须为连通图")
+        raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
-        raise nx.NetworkXError("仅适用于无向图")
-    if nswap > max_tries:
-        raise nx.NetworkXError("交换次数超过允许的最大次数")
+        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+    if n_swap > max_tries:
+        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
-        raise nx.NetworkXError("节点数太少，至少要含三个节点")
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
-    tn = 0  # 尝试次数
-    swapcount = 0  # 有效交换次数
+    n_try = 0
+    count_swap = 0
 
     G = copy.deepcopy(G0)
     hubedges = []  # 富边
@@ -598,8 +599,8 @@ def rich_club_break(G0, k=10, nswap=1, max_tries=100, connected=1):
         elif e[0] not in hubs and e[1] not in hubs:
             nothubedges.append(e)
 
-    swapcount = 0
-    while swapcount < nswap and hubedges and nothubedges:
+    count_swap = 0
+    while count_swap < n_swap and hubedges and nothubedges:
         u, v = random.choice(hubedges)  # 随机选一条富边
         x, y = random.choice(nothubedges)  # 随机选一条非富边
         if len(set([u, v, x, y])) < 4:
@@ -620,14 +621,14 @@ def rich_club_break(G0, k=10, nswap=1, max_tries=100, connected=1):
                     hubedges.append((u, v))
                     nothubedges.append((x, y))
                     continue
-        if tn >= max_tries:
-            print('Maximum number of attempts (%s) exceeded ' % tn)
+        if n_try >= max_tries:
+            print('Maximum number of attempts (%s) exceeded ' % n_try)
             break
-        swapcount = swapcount + 1
+        count_swap = count_swap + 1
     return G
 
 
-def assort_mixing(G0, k=10, nswap=1, max_tries=100, connected=1):
+def assort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
     """
     随机选取两条边，四个节点，将这四个节点的度值从大到小排序，
     将度值较大的两个节点进行连接，度值较小的两个节点进行连接，
@@ -635,28 +636,28 @@ def assort_mixing(G0, k=10, nswap=1, max_tries=100, connected=1):
     """
     # G0：待改变结构的网络
    # k 为富节点度值的门限值
-    # nswap：是改变成功的系数，默认值为1
+    # n_swap：是改变成功的系数，默认值为1
     # max_tries：是尝试改变的次数，默认值为100
     # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
 
     if not nx.is_connected(G0):
-        raise nx.NetworkXError("非连通图，必须为连通图")
+        raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
-        raise nx.NetworkXError("仅适用于无向图")
-    if nswap > max_tries:
-        raise nx.NetworkXError("交换次数超过允许的最大次数")
+        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+    if n_swap > max_tries:
+        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
-        raise nx.NetworkXError("节点数太少，至少要含三个节点")
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
-    tn = 0  # 尝试次数
-    swapcount = 0  # 有效交换次数
+    n_try = 0
+    count_swap = 0
 
     G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while swapcount < nswap:  # 有效交换次数小于规定交换次数
-        tn += 1
+    while count_swap < n_swap:
+        n_try += 1
 
         # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -686,16 +687,16 @@ def assort_mixing(G0, k=10, nswap=1, max_tries=100, connected=1):
                     G.add_edge(x, y)
                     G.add_edge(u, v)
                     continue
-        if tn >= max_tries:
+        if n_try >= max_tries:
             e = ('Maximum number of swap attempts (%s) exceeded ' %
-                 tn + 'before desired swaps achieved (%s).' % nswap)
+                 n_try + 'before desired swaps achieved (%s).' % n_swap)
             print(e)
             break
-        swapcount += 1
+        count_swap += 1
     return G
 
 
-def disassort_mixing(G0, k=10, nswap=1, max_tries=100, connected=1):
+def disassort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
     """
     随机选取两条边，四个节点，将这四个节点的度值从大到小排序，
     将度值差异较大的两个节点进行连接，第一和第四两个节点相连，
@@ -704,28 +705,28 @@ def disassort_mixing(G0, k=10, nswap=1, max_tries=100, connected=1):
     """
     # G0：待改变结构的网络
    # k 为富节点度值的门限值
-    # nswap：是改变成功的系数，默认值为1
+    # n_swap：是改变成功的系数，默认值为1
     # max_tries：是尝试改变的次数，默认值为100
     # connected：是否需要保证网络的联通特性，参数为1需要保持，参数为0不需要保持
 
     if not nx.is_connected(G0):
-        raise nx.NetworkXError("非连通图，必须为连通图")
+        raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
-        raise nx.NetworkXError("仅适用于无向图")
-    if nswap > max_tries:
-        raise nx.NetworkXError("交换次数超过允许的最大次数")
+        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+    if n_swap > max_tries:
+        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
-        raise nx.NetworkXError("节点数太少，至少要含三个节点")
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
-    tn = 0  # 尝试次数
-    swapcount = 0  # 有效交换次数
+    n_try = 0
+    count_swap = 0
 
     G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while swapcount < nswap:  # 有效交换次数小于规定交换次数
-        tn += 1
+    while count_swap < n_swap:
+        n_try += 1
 
         # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -755,30 +756,30 @@ def disassort_mixing(G0, k=10, nswap=1, max_tries=100, connected=1):
                     G.add_edge(x, y)
                     G.add_edge(u, v)
                     continue
-        if tn >= max_tries:
+        if n_try >= max_tries:
             e = ('Maximum number of swap attempts (%s) exceeded ' %
-                 tn + 'before desired swaps achieved (%s).' % nswap)
+                 n_try + 'before desired swaps achieved (%s).' % n_swap)
             print(e)
             break
-        swapcount += 1
+        count_swap += 1
     return G
 
 
 # 下面的程序暂时未修改
-def random_1kd(G0, nswap=1, max_tries=100):  # 有向网络基于随机断边重连的1阶零模型
+def random_1kd(G0, n_swap=1, max_tries=100):  # 有向网络基于随机断边重连的1阶零模型
     """
     随机取两条边 u->v 和 x->y, 若u->y,x->v不存在, 断边重连
     """
     if not G0.is_directed():
         raise nx.NetworkXError("Graph not directed")
-    if nswap > max_tries:
+    if n_swap > max_tries:
         raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 4:
         raise nx.NetworkXError("Graph has less than four nodes.")
     G = copy.deepcopy(G0)
     n = 0
-    swapcount = 0
-    while swapcount < nswap:
+    count_swap = 0
+    while count_swap < n_swap:
         (u, v), (x, y) = random.sample(G.edges(), 2)
         if len(set([u, v, x, y])) < 4:
             continue
@@ -787,10 +788,10 @@ def random_1kd(G0, nswap=1, max_tries=100):  # 有向网络基于随机断边重
             G.add_edge(x, v)
             G.remove_edge(u, v)
             G.remove_edge(x, y)
-            swapcount += 1
+            count_swap += 1
         if n >= max_tries:
             e = ('Maximum number of swap attempts (%s) exceeded ' %
-                 n + 'before desired swaps achieved (%s).' % nswap)
+                 n + 'before desired swaps achieved (%s).' % n_swap)
             print e
             break
         n += 1
