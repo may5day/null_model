@@ -140,17 +140,17 @@ def random_0k(G0, n_swap=1, max_tries=100, connected=1):
         if len(set([u, v, x, y])) < 4:
             continue
         if (x, y) not in edges and (y, x) not in edges:
-            # cut the origin edge
+            # cut the original edge
             G.remove_edge(u, v)
             # connect the new edge
             G.add_edge(x, y)
             edges.remove((u, v))
             edges.append((x, y))
 
+            # if connected = 1 but the original graph is not connected fully,
+            # withdraw the operation about the swap of edges.
             if connected == 1:
                 if not nx.is_connected(G):
-                    # if connected = 1 but the origin graph is not connected fully,
-                    # withdraw the operation about the swap of edges.
                     G.add_edge(u, v)
                     G.add_edge(x, y)
                     G.remove_edge(u, y)
@@ -158,7 +158,7 @@ def random_0k(G0, n_swap=1, max_tries=100, connected=1):
                     continue
             count_swap = count_swap + 1
 
-        if n >= max_tries:
+        if n_try >= max_tries:
             e = ('Maximum number of swap attempts (%s) exceeded ' %
                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             print e
@@ -211,7 +211,7 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
             break
         n_try += 1
 
-        # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
+        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -219,17 +219,20 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
         x = keys[xi]
         v = random.choice(list(G[u]))
         y = random.choice(list(G[x]))
-
-        if len(set([u, v, x, y])) == 4:  # 保证是四个独立节点
-            if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
-                G.add_edge(u, y)  # 增加两条新连边
+        # make sure the four nodes are not repeated
+        if len(set([u, v, x, y])) == 4:
+            # make sure the new edges are not exist in the original graph
+            if (y not in G[u]) and (v not in G[x]):
+                # add two new edges
+                G.add_edge(u, y)
                 G.add_edge(v, x)
-
-                G.remove_edge(u, v)  # 删除两条旧连边
+                # delete two old edges
+                G.remove_edge(u, v)
                 G.remove_edge(x, y)
-
-                if connected == 1:  # 判断是否需要保持联通特性，为1的话则需要保持该特性
-                    if not nx.is_connected(G):  # 保证网络是全联通的:若网络不是全联通网络，则撤回交换边的操作
+                # if connected = 1 but the original graph is not connected fully,
+                # withdraw the operation about the swap of edges.
+                if connected == 1:
+                    if not nx.is_connected(G):
                         G.add_edge(u, v)
                         G.add_edge(x, y)
                         G.remove_edge(u, y)
@@ -259,7 +262,8 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
 
     """
 
-    # 保证2k特性不变和网络联通的情况下，交换社团内部的连边
+    # make sure the 2K-characteristic unchanged and the graph is connected
+    # swap the edges inside the community
     if not nx.is_connected(G0):
         raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
@@ -283,7 +287,7 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
             break
         n_try += 1
 
-        # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
+        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -292,17 +296,20 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
         v = random.choice(list(G[u]))
         y = random.choice(list(G[x]))
 
-        if len(set([u, v, x, y])) == 4:  # 保证是四个独立节点
+        # make sure the four nodes are not repeated
+        if len(set([u, v, x, y])) == 4:
             if G.degree(v) == G.degree(y):  # 保证节点的度匹配特性不变
-                if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
-                    G.add_edge(u, y)  # 增加两条新连边
+                # make sure the new edges are not exist in the original graph
+                if (y not in G[u]) and (v not in G[x]):
+                	# add two new edges
+                    G.add_edge(u, y)
                     G.add_edge(v, x)
-
-                    G.remove_edge(u, v)  # 删除两条旧连边
+                    # delete two old edges
+                    G.remove_edge(u, v)
                     G.remove_edge(x, y)
-
-                    if connected == 1:  # 判断是否需要保持联通特性，为1的话则需要保持该特性
-                        # 保证网络是全联通的:若网络不是全联通网络，则撤回交换边的操作
+                    # if connected = 1 but the original graph is not connected fully,
+                    # withdraw the operation about the swap of edges.
+                    if connected == 1:
                         if not nx.is_connected(G):
                             G.add_edge(u, v)
                             G.add_edge(x, y)
@@ -332,7 +339,8 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
     The 2.5K null models has the same clustering spectrum and joint degree distribution with the original network
 
     """
-    # 保证2.5k特性不变和网络联通的情况下，交换社团内部的连边
+    # make sure the 2K-characteristic unchanged and the graph is connected
+    # swap the edges inside the community
     if not nx.is_connected(G0):
         raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
@@ -356,7 +364,7 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
             break
         n_try += 1
 
-        # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
+        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -364,14 +372,15 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
         x = keys[xi]
         v = random.choice(list(G[u]))
         y = random.choice(list(G[x]))
-
-        if len(set([u, v, x, y])) == 4:  # 保证是四个独立节点
+        # make sure the four nodes are not repeated
+        if len(set([u, v, x, y])) == 4:
             if G.degree(v) == G.degree(y):  # 保证节点的度匹配特性不变
-                if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
-                    G.add_edge(u, y)  # 增加两条新连边
+                # make sure the new edges are not exist in the original graph
+                if (y not in G[u]) and (v not in G[x]):
+                    G.add_edge(u, y)
                     G.add_edge(v, x)
 
-                    G.remove_edge(u, v)  # 删除两条旧连边
+                    G.remove_edge(u, v)
                     G.remove_edge(x, y)
 
                     degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
@@ -394,7 +403,7 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
                         G.remove_edge(x, v)
                         break
 
-                    if connected == 1:  # 判断是否需要保持联通特性，为1的话则需要保持该特性
+                    if connected == 1:
                         # 保证网络是全联通的:若网络不是全联通网络，则撤回交换边的操作
                         if not nx.is_connected(G):
                             G.add_edge(u, v)
@@ -482,7 +491,7 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
                         G.remove_edge(u, y)
                         G.remove_edge(x, v)
                         continue
-                    if connected == 1:  # 判断是否需要保持联通特性，为1的话则需要保持该特性
+                    if connected == 1:
                         # 保证网络是全联通的:若网络不是全联通网络，则撤回交换边的操作
                         if not nx.is_connected(G):
                             G.add_edge(u, v)
@@ -547,7 +556,7 @@ def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1):
             G.remove_edge(x, y)
             hubs_edges.append((u, y))  # 更新已存在富节点和富节点连边
 
-            if connected == 1:  # 判断是否需要保持联通特性，为1的话则需要保持该特性
+            if connected == 1:
                 if not nx.is_connected(G):  # 保证网络是全联通的:若网络不是全联通网络，则撤回交换边的操作
                     G.add_edge(u, v)
                     G.add_edge(x, y)
