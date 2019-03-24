@@ -12,14 +12,19 @@ import copy
 selfloop:config_model\random_1k
 """
 
-__all__ = ['count_degree_nodes',
-           'er_graph',
+__all__ = ['count_degree_nodes',  # dict_degree_nodes
+           'er_graph',  # ER_model
            'config_model',
            'random_0k',
            'random_1k',
            'random_2k',
            'random_25k',
-           'random_3k']
+           'random_3k',
+           'rich_club_create',
+           'rich_club_break',
+           'assort_mixing',
+           'disassort_mixing',
+           'random_1kd']
 
 
 def count_degree_nodes(degree_nodes):
@@ -211,7 +216,8 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
             break
         n_try += 1
 
-        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
+        # make sure the degree distribution unchanged,choose two edges
+        # (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -382,29 +388,28 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
 
                     G.remove_edge(u, v)
                     G.remove_edge(x, y)
-
+                    # get the degree of four nodes and their neighbor nodes, degree_node_list : [[degree,node]]
                     degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
                         [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
-                    # 先找到四个节点以及他们邻居节点的集合，然后取出这些节点所有的度值对应的节点，格式为（度，节点）形式的列表
-                    # 找到每个度对应的所有节点，具体形式为
-                    D = dict_degree_nodes(degree_node_list)
+                    # get all nodes of each degree :{degree:[node1,node2...]}
+                    dict_degree = count_degree_nodes(degree_node_list)
 
-                    for i in range(len(D)):
+                    for i in range(len(dict_degree)):
                         avcG0 = nx.average_clustering(
-                            G0, nodes=D.values()[i], weight=None, count_zeros=True)
+                            G0, nodes=dict_degree.values()[i], weight=None, count_zeros=True)
                         avcG = nx.average_clustering(
-                            G, nodes=D.values()[i], weight=None, count_zeros=True)
+                            G, nodes=dict_degree.values()[i], weight=None, count_zeros=True)
                         i += 1
-
-                    if avcG0 != avcG:  # 若置乱前后度相关的聚类系数不同，则撤销此次置乱操作
+                    # if the clustering coefficient about dgree changed after scrambling ,withdraw this operation
+                    if avcG0 != avcG:
                         G.add_edge(u, v)
                         G.add_edge(x, y)
                         G.remove_edge(u, y)
                         G.remove_edge(x, v)
                         break
-
+                    # if connected = 1 but the original graph is not connected fully,
+                    # withdraw the operation about the swap of edges.
                     if connected == 1:
-                        # 保证网络是全联通的:若网络不是全联通网络，则撤回交换边的操作
                         if not nx.is_connected(G):
                             G.add_edge(u, v)
                             G.add_edge(x, y)
@@ -435,7 +440,9 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
     3K null model, which is considered interconnectivity among triples of nodes
 
     """
-    # 保证3k特性不变和网络联通的情况下，交换社团内部的连边
+
+    # make sure the 2K-characteristic unchanged and the graph is connected
+    # swap the edges inside the community
     if not nx.is_connected(G0):
         raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
@@ -459,7 +466,7 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
             break
         n_try += 1
 
-        # 在保证度分布不变的情况下，随机选取两条连边u-v，x-y
+        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -467,32 +474,33 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
         x = keys[xi]
         v = random.choice(list(G[u]))
         y = random.choice(list(G[x]))
-
-        if len(set([u, v, x, y])) == 4:  # 保证是四个独立节点
+        # make sure the four nodes are not repeated
+        if len(set([u, v, x, y])) == 4:
             if G.degree(v) == G.degree(y):  # 保证节点的度匹配特性不变
-                if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
-                    G.add_edge(u, y)  # 增加两条新连边
+                # make sure the new edges are not exist in the original graph
+                if (y not in G[u]) and (v not in G[x]):
+                    G.add_edge(u, y)
                     G.add_edge(v, x)
 
-                    G.remove_edge(u, v)  # 删除两条旧连边
+                    G.remove_edge(u, v)
                     G.remove_edge(x, y)
 
-                    # 找到四个节点以及他们邻居节点的集合
+                    # get the set of four nodes and their neighbor nodes
                     node_list = [u, v, x, y] + \
                         list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])
-                    # 计算旧网络中4个节点以及他们邻居节点的聚类系数
+                    # cal the clustering coefficient of the four nodes in the original and the new graph
                     avcG0 = nx.clustering(G0, nodes=node_list)
-                    # 计算新网络中4个节点以及他们邻居节点的聚类系数
                     avcG = nx.clustering(G, nodes=node_list)
-
-                    if avcG0 != avcG:  # 保证涉及到的四个节点聚类系数相同:若聚类系数不同，则撤回交换边的操作
+                    # if the clustering coefficient about dgree changed after scrambling ,withdraw this operation
+                    if avcG0 != avcG:
                         G.add_edge(u, v)
                         G.add_edge(x, y)
                         G.remove_edge(u, y)
                         G.remove_edge(x, v)
                         continue
+                    # if connected = 1 but the original graph is not connected fully,
+                    # withdraw the operation about the swap of edges.
                     if connected == 1:
-                        # 保证网络是全联通的:若网络不是全联通网络，则撤回交换边的操作
                         if not nx.is_connected(G):
                             G.add_edge(u, v)
                             G.add_edge(x, y)
