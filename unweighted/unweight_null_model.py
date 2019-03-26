@@ -112,7 +112,7 @@ def random_0k(G0, n_swap=1, max_tries=100, connected=1):
         number of changes
     connected : int
         keep the connectivity of the graph or not.
-        1:keep,    0:not keep
+        1 : keep,    0 : not keep
 
     Notes
     -----
@@ -184,7 +184,7 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
         number of changes
     connected : int
         keep the connectivity of the graph or not.
-        1:keep,    0:not keep
+        1 : keep,    0 : not keep
 
     Notes
     -----
@@ -211,7 +211,8 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            e = ('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s).' % n_swap)
             print(e)
             break
         n_try += 1
@@ -260,7 +261,7 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
         number of changes
     connected : int
         keep the connectivity of the graph or not.
-        1:keep,    0:not keep
+        1 : keep,    0 : not keep
 
     Notes
     -----
@@ -288,7 +289,8 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            e = ('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s).' % n_swap)
             print(e)
             break
         n_try += 1
@@ -304,7 +306,7 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
 
         # make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # 保证节点的度匹配特性不变
+            # make sure the degree matching characteristic of the nodes remain unchanged
             if G.degree(v) == G.degree(y): 
                 # make sure the new edges are not exist in the original graph
                 if (y not in G[u]) and (v not in G[x]):
@@ -339,7 +341,7 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
         number of changes
     connected : int
         keep the connectivity of the graph or not.
-        1:keep,    0:not keep
+        1 : keep,    0 : not keep
 
     Notes
     -----
@@ -366,7 +368,8 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            e = ('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s).' % n_swap)
             print(e)
             break
         n_try += 1
@@ -381,7 +384,7 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # 保证节点的度匹配特性不变
+            # make sure the degree matching characteristic of the nodes remain unchanged
             if G.degree(v) == G.degree(y):
                 # make sure the new edges are not exist in the original graph
                 if (y not in G[u]) and (v not in G[x]):
@@ -435,7 +438,7 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
         number of changes
     connected : int
         keep the connectivity of the graph or not.
-        1:keep,    0:not keep
+        1 : keep,    0 : not keep
 
     Notes
     -----
@@ -463,7 +466,8 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            e = ('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s).' % n_swap)
             print(e)
             break
         n_try += 1
@@ -478,7 +482,7 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # 保证节点的度匹配特性不变
+            # make sure the degree matching characteristic of the nodes remain unchanged
             if G.degree(v) == G.degree(y):
                 # make sure the new edges are not exist in the original graph
                 if (y not in G[u]) and (v not in G[x]):
@@ -515,7 +519,10 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
 
 
 def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1): 
-    """
+    """create a null model where the rich-club connectivity is preserved.
+    
+    choose two edges between hubs and non-hubs randomly, if there is no edge between hubs and between non-hubs,
+    reconnect links until the times you try reached the max_tries or there are edges between all hubs.
 
     Parameters
     ----------
@@ -528,19 +535,13 @@ def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1):
         number of changes
     connected : int
         keep the connectivity of the graph or not.
-        1:keep,    0:not keep
+        1 : keep,    0 : not keep
 
     Notes
     -----
     hub_edges : the edges between hubs
     nonhub_edges : the edges between non-hubs
 
-    Returns
-    -------
-    """
-    """
-    任选两条边(富节点和非富节点的连边)，若富节点间无连边，非富节点间无连边，则断边重连
-    达到最大尝试次数或全部富节点间都有连边，循环结束
     """
 
     if not nx.is_connected(G0):
@@ -563,12 +564,13 @@ def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1):
     # the edges between hubs that exist in original graph
     hubs_edges = [e for e in G.edges() if G.degree()[e[0]] >= k and G.degree()[
         e[1]] >= k]
-    # 全部富节点间都有连边的边数
+    # the number of edges between all hubs
     len_possible_edges = len(hubs) * (len(hubs) - 1) / 2
 
     while count_swap < n_swap and len(hubs_edges) < len_possible_edges:
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            e = ('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s).' % n_swap)
             print(e)
             break
         n_try += 1
@@ -609,7 +611,10 @@ def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1):
 
 
 def rich_club_break(G0, k=10, n_swap=1, max_tries=100, connected=1):
-    """
+    """create a null model where the rich-club connectivity is not preserved.
+    
+    choose two edges between hubs and non-hubs randomly, if there is no edge between hubs and non-hubs,
+    reconnect links until the times you try reached the max_tries or there are no hub edges or non-hub edges.
 
     Parameters
     ----------
@@ -622,26 +627,19 @@ def rich_club_break(G0, k=10, n_swap=1, max_tries=100, connected=1):
         number of changes
     connected : int
         keep the connectivity of the graph or not.
-        1:keep,    0:not keep
+        1 : keep,    0 : not keep
 
     Notes
     -----
     hub_edges : the edges between hubs
     nonhub_edges : the edges between non-hubs
 
-    Returns
-    -------
-    """
-    """
-
-    任选两条边(一条富边，一条非富边)，若富节点和非富节点间无连边，则断边重连
-    达到最大尝试次数或无富边或无非富边，循环结束
     """
 
     if not nx.is_connected(G0):
         raise nx.NetworkXError("It is only allowed for connected graphs.")
     if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+        raise nx.NetworkXError("I t is only allowed for undirected graphs.")
     if n_swap > max_tries:
         raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
@@ -695,7 +693,10 @@ def rich_club_break(G0, k=10, n_swap=1, max_tries=100, connected=1):
 
 
 def assort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
-    """
+    """return a assortative graph
+
+    choose two edges (four nodes) randomly, sort these nodes by degree,
+    connect the first two nodes and the last nodes separately.
 
     Parameters
     ----------
@@ -708,18 +709,11 @@ def assort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
         number of changes
     connected : int
         keep the connectivity of the graph or not.
-        1:keep,    0:not keep
+        1 : keep,    0 : not keep
 
     Notes
     -----
     
-    Returns
-    -------
-    """
-    """
-    随机选取两条边，四个节点，将这四个节点的度值从大到小排序，
-    将度值较大的两个节点进行连接，度值较小的两个节点进行连接，
-    最终形成了同配网络
     """
 
     if not nx.is_connected(G0):
@@ -779,7 +773,10 @@ def assort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
 
 
 def disassort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
-    """
+    """return a disassortative graph
+
+    choose two edges (four nodes) randomly, sort these nodes by degree,
+    connect the first and the last nodes as well as the second and the third nodes separately.
 
     Parameters
     ----------
@@ -792,19 +789,11 @@ def disassort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
         number of changes
     connected : int
         keep the connectivity of the graph or not.
-        1:keep,    0:not keep
+        1 : keep,    0 : not keep
 
     Notes
     -----
-    
-    Returns
-    -------
-    """
-    """
-    随机选取两条边，四个节点，将这四个节点的度值从大到小排序，
-    将度值差异较大的两个节点进行连接，第一和第四两个节点相连，
-    将度值差异较小的两个节点进行连接，第二和第三两个节点相连
-    最终形成了异配网络
+
     """
 
     if not nx.is_connected(G0):
@@ -863,10 +852,22 @@ def disassort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
     return G
 
 
-# 下面的程序暂时未修改
-def random_1kd(G0, n_swap=1, max_tries=100):  # 有向网络基于随机断边重连的1阶零模型
-    """
-    随机取两条边 u->v 和 x->y, 若u->y,x->v不存在, 断边重连
+# to be connected...
+def random_1kd(G0, n_swap=1, max_tries=100):
+    """Return a 1K null model beased on random reconnection algorithm
+
+    choose two edges (u->v and x->y), if u->y and x->v don't exist ,reconnect these edges.
+    Parameters
+    ----------
+    G0 : directed and unweighted graph
+    n_swap : int (default = 1)
+        coefficient of change successfully
+    max_tries : int (default = 100)
+        number of changes
+    connected : int
+        keep the connectivity of the graph or not.
+        1 : keep,    0 : not keep
+
     """
     if not G0.is_directed():
         raise nx.NetworkXError("Graph not directed")
@@ -881,7 +882,8 @@ def random_1kd(G0, n_swap=1, max_tries=100):  # 有向网络基于随机断边�
         (u, v), (x, y) = random.sample(G.edges(), 2)
         if len(set([u, v, x, y])) < 4:
             continue
-        if (x, v) not in G.edges() and (u, y) not in G.edges():  # 断边重连
+        # reconnection
+        if (x, v) not in G.edges() and (u, y) not in G.edges():
             G.add_edge(u, y)
             G.add_edge(x, v)
             G.remove_edge(u, v)
