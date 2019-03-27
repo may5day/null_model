@@ -8,9 +8,7 @@ revised on Oct 15 2017
 import networkx as nx
 import random
 import copy
-"""
-selfloop:config_model\random_1k
-"""
+
 
 __all__ = ['count_degree_nodes',  # dict_degree_nodes
            'er_graph',  # ER_model
@@ -57,7 +55,7 @@ def count_degree_nodes(degree_nodes):
 
 
 def er_graph(G):
-    """Return a random graph G_{n,p} (Erdős-Rényi graph, binomial graph).
+    """Returns a random graph G_{n,p} (Erdős-Rényi graph, binomial graph).
 
     Chooses each of the possible edges with probability p.
 
@@ -101,7 +99,7 @@ def config_model(G):
 
 
 def random_0k(G0, n_swap=1, max_tries=100, connected=1):
-    """Return a 0K null model beased on random reconnection algorithm
+    """Returns a 0K null model beased on random reconnection algorithm
 
     Parameters
     ----------
@@ -172,8 +170,7 @@ def random_0k(G0, n_swap=1, max_tries=100, connected=1):
 
 
 def random_1k(G0, n_swap=1, max_tries=100, connected=1):
-    """
-    Return a 1K null model beased on random reconnection algorithm
+    """Returns a 1K null model beased on random reconnection algorithm
 
     Parameters
     ----------
@@ -250,7 +247,7 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
 
 
 def random_2k(G0, n_swap=1, max_tries=100, connected=1):
-	"""Return a 2K null model beased on random reconnection algorithm
+	"""Returns a 2K null model beased on random reconnection algorithm
 
     Parameters
     ----------
@@ -330,7 +327,7 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
 
 
 def random_25k(G0, n_swap=1, max_tries=100, connected=1):
-	"""Return a 2.5K null model beased on random reconnection algorithm
+	"""Returns a 2.5K null model beased on random reconnection algorithm
 
     Parameters
     ----------
@@ -427,7 +424,7 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
 
 
 def random_3k(G0, n_swap=1, max_tries=100, connected=1):
-    """Return a 3K null model beased on random reconnection algorithm
+    """Returns a 3K null model beased on random reconnection algorithm
 
     Parameters
     ----------
@@ -519,7 +516,7 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
 
 
 def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1): 
-    """create a null model where the rich-club connectivity is preserved.
+    """Returns a null model where the rich-club connectivity is preserved.
     
     choose two edges between hubs and non-hubs randomly, if there is no edge between hubs and between non-hubs,
     reconnect links until the times you try reached the max_tries or there are edges between all hubs.
@@ -611,7 +608,7 @@ def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1):
 
 
 def rich_club_break(G0, k=10, n_swap=1, max_tries=100, connected=1):
-    """create a null model where the rich-club connectivity is not preserved.
+    """Returns a null model where the rich-club connectivity is not preserved.
     
     choose two edges between hubs and non-hubs randomly, if there is no edge between hubs and non-hubs,
     reconnect links until the times you try reached the max_tries or there are no hub edges or non-hub edges.
@@ -693,7 +690,7 @@ def rich_club_break(G0, k=10, n_swap=1, max_tries=100, connected=1):
 
 
 def assort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
-    """return a assortative graph
+    """Returns a assortative graph
 
     choose two edges (four nodes) randomly, sort these nodes by degree,
     connect the first two nodes and the last nodes separately.
@@ -773,7 +770,7 @@ def assort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
 
 
 def disassort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
-    """return a disassortative graph
+    """Returns a disassortative graph
 
     choose two edges (four nodes) randomly, sort these nodes by degree,
     connect the first and the last nodes as well as the second and the third nodes separately.
@@ -854,7 +851,7 @@ def disassort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
 
 # to be connected...
 def random_1kd(G0, n_swap=1, max_tries=100):
-    """Return a 1K null model beased on random reconnection algorithm
+    """Returns a 1K null model beased on random reconnection algorithm
 
     choose two edges (u->v and x->y), if u->y and x->v don't exist ,reconnect these edges.
     Parameters
