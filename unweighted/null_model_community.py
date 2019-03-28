@@ -10,6 +10,23 @@ import random
 import copy
 
 
+
+__all__ = ['edge_in_community',
+           'dict_degree_nodes',
+           'inner_random_1k',
+           'inner_random_2k',
+           'inner_random_25k',
+           'inner_random_3k',
+           'inter_random_1k',
+           'inter_random_2k',
+           'inter_random_25k',
+           'inter_random_3k',
+           'inner_community_swap',
+           'inter_community_swap',
+           'Q_increase',
+           'Q_decrease',]
+
+
 def edge_in_community(node_community_list, edge):
     # 功能: 判断某条边是不是社团内部连边
     # node_community_list是网络中节点的社团归属信息
