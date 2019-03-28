@@ -10,7 +10,6 @@ import random
 import copy
 
 
-
 __all__ = ['edge_in_community',
            'dict_degree_nodes',
            'inner_random_1k',
@@ -24,21 +23,33 @@ __all__ = ['edge_in_community',
            'inner_community_swap',
            'inter_community_swap',
            'Q_increase',
-           'Q_decrease',]
+           'Q_decrease', ]
 
 
 def edge_in_community(node_community_list, edge):
-    # 功能: 判断某条边是不是社团内部连边
-    # node_community_list是网络中节点的社团归属信息
-    # edge是网络中的一条连边
-    # 返回布尔变量：如果是社团内部连边，返回值为1；如果是社团外部连边，返回值为0
+    """Returns True if the edge is in the community, false otherwise.
+
+    Parameters
+    ----------
+    node_community_list : list
+        nodes and the communities they belong to
+    edge:
+        an edge in the graph
+
+    Notes
+    -----
+
+    Examples
+    --------
+    """
     return_value = 0
     for community_i in node_community_list:
-        if edge[0] in community_i and edge[1] in community_i:  # 拿出边的两个节点
-            return_value = return_value + 1
-            return 1
+        if edge[0] in community_i and edge[1] in community_i:
+            return_value += 1
     if return_value == 0:
         return 0
+    else:
+        return 1
 
 
 def dict_degree_nodes(degree_node_list):
