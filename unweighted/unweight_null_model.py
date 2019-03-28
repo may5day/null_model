@@ -129,8 +129,9 @@ def random_0k(G0, n_swap=1, max_tries=100, connected=1):
         raise nx.NetworkXError("This graph has less than three nodes.")
 
     G = copy.deepcopy(G0)
-
+    # swap times
     n_try = 0
+    # number of effective swaps
     count_swap = 0
     edges = G.edges()
     nodes = G.nodes()
