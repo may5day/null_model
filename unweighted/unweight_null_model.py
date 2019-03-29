@@ -10,7 +10,8 @@ import random
 import copy
 
 
-__all__ = ['count_degree_nodes',  # dict_degree_nodes
+__all__ = ['judge_error'
+           'count_degree_nodes',  # dict_degree_nodes
            'er_graph',  # ER_model
            'config_model',
            'random_0k',
@@ -23,6 +24,17 @@ __all__ = ['count_degree_nodes',  # dict_degree_nodes
            'assort_mixing',
            'disassort_mixing',
            'random_1kd']
+
+
+def judge_error(G0, n_swap, max_tries, connected):
+    if not nx.is_connected(G0):
+        raise nx.NetworkXError("For connected graphs only.")
+    if G0.is_directed():
+        raise nx.NetworkXError("For undirected graphs only.")
+    if n_swap > max_tries:
+        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
+    if len(G0) < 3:
+        raise nx.NetworkXError("This graph has less than three nodes.")
 
 
 def count_degree_nodes(degree_nodes):
@@ -46,11 +58,11 @@ def count_degree_nodes(degree_nodes):
     ... {1: [2, 3], 2: [4, 5]}s
     """
     degree_dict = {}
-    for n_d in degree_nodes:
-        if n_d[0] not in degree_dict:
-            degree_dict[n_d[0]] = [n_d[1]]
+    for dn_i in degree_nodes:
+        if dn_i[0] not in degree_dict:
+            degree_dict[dn_i[0]] = [dn_i[1]]
         else:
-            degree_dict[n_d[0]].append(n_d[1])
+            degree_dict[dn_i[0]].append(dn_i[1])
     return degree_dict
 
 
@@ -122,7 +134,7 @@ def random_0k(G0, n_swap=1, max_tries=100, connected=1):
 
     """
     if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected graphs.")
+        raise nx.NetworkXError("For undirected graphs only.")
     if n_swap > max_tries:
         raise nx.NetworkXError("Number of swaps > number of tries allowed.")
     if len(G0) < 3:
@@ -191,14 +203,7 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
 
     """
 
-    if not nx.is_connected(G0):
-        raise nx.NetworkXError("It is only allowed for connected graphs.")
-    if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected graphs.")
-    if n_swap > max_tries:
-        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
-    if len(G0) < 4:
-        raise nx.NetworkXError("This graph has less than three nodes.")
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     count_swap = 0
@@ -269,14 +274,7 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
 
     # make sure the 2K-characteristic unchanged and the graph is connected
     # swap the edges inside the community
-    if not nx.is_connected(G0):
-        raise nx.NetworkXError("It is only allowed for connected graphs.")
-    if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected graphs.")
-    if n_swap > max_tries:
-        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
-    if len(G0) < 3:
-        raise nx.NetworkXError("This graph has less than three nodes.")
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     count_swap = 0
@@ -348,14 +346,7 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
     """
     # make sure the 2K-characteristic unchanged and the graph is connected
     # swap the edges inside the community
-    if not nx.is_connected(G0):
-        raise nx.NetworkXError("It is only allowed for connected graphs.")
-    if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected graphs.")
-    if n_swap > max_tries:
-        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
-    if len(G0) < 3:
-        raise nx.NetworkXError("This graph has less than three nodes.")
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     count_swap = 0
@@ -446,14 +437,7 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
 
     # make sure the 2K-characteristic unchanged and the graph is connected
     # swap the edges inside the community
-    if not nx.is_connected(G0):
-        raise nx.NetworkXError("It is only allowed for connected graphs.")
-    if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected graphs.")
-    if n_swap > max_tries:
-        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
-    if len(G0) < 3:
-        raise nx.NetworkXError("This graph has less than three nodes.")
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     count_swap = 0
@@ -542,14 +526,7 @@ def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1):
 
     """
 
-    if not nx.is_connected(G0):
-        raise nx.NetworkXError("It is only allowed for connected graphs.")
-    if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected graphs.")
-    if n_swap > max_tries:
-        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
-    if len(G0) < 3:
-        raise nx.NetworkXError("This graph has less than three nodes.")
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     count_swap = 0
@@ -634,14 +611,7 @@ def rich_club_break(G0, k=10, n_swap=1, max_tries=100, connected=1):
 
     """
 
-    if not nx.is_connected(G0):
-        raise nx.NetworkXError("It is only allowed for connected graphs.")
-    if G0.is_directed():
-        raise nx.NetworkXError("I t is only allowed for undirected graphs.")
-    if n_swap > max_tries:
-        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
-    if len(G0) < 3:
-        raise nx.NetworkXError("This graph has less than three nodes.")
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     count_swap = 0
@@ -686,7 +656,7 @@ def rich_club_break(G0, k=10, n_swap=1, max_tries=100, connected=1):
         if n_try >= max_tries:
             print('Maximum number of attempts (%s) exceeded ' % n_try)
             break
-        count_swap = count_swap + 1
+        count_swap += 1
     return G
 
 
@@ -714,14 +684,7 @@ def assort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
     
     """
 
-    if not nx.is_connected(G0):
-        raise nx.NetworkXError("It is only allowed for connected graphs.")
-    if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected graphs.")
-    if n_swap > max_tries:
-        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
-    if len(G0) < 3:
-        raise nx.NetworkXError("This graph has less than three nodes.")
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     count_swap = 0
@@ -794,14 +757,7 @@ def disassort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
 
     """
 
-    if not nx.is_connected(G0):
-        raise nx.NetworkXError("It is only allowed for connected graphs.")
-    if G0.is_directed():
-        raise nx.NetworkXError("It is only allowed for undirected graphs.")
-    if n_swap > max_tries:
-        raise nx.NetworkXError("Number of swaps > number of tries allowed.")
-    if len(G0) < 3:
-        raise nx.NetworkXError("This graph has less than three nodes.")
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     count_swap = 0
