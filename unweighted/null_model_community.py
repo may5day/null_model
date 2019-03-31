@@ -120,8 +120,7 @@ def inner_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -195,8 +194,7 @@ def inner_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -271,8 +269,7 @@ def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -367,8 +364,7 @@ def inner_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -458,8 +454,7 @@ def inter_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -533,8 +528,7 @@ def inter_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -608,8 +602,7 @@ def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -704,8 +697,7 @@ def inter_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -792,8 +784,7 @@ def inner_community_swap(G0, node_community, n_swap=1, max_tries=100):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -855,8 +846,7 @@ def inter_community_swap(G0, node_community, n_swap=1, max_tries=100):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -921,8 +911,7 @@ def Q_increase(G0, node_community, n_swap=1, max_tries=100):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
@@ -987,8 +976,7 @@ def Q_decrease(G0, node_community, n_swap=1, max_tries=100):
 
     while count_swap < n_swap:  # 有效交换次数小于规定交换次数
         if n_try >= max_tries:
-            e = ('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
-            print(e)
+            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
             break
         n_try += 1
 
