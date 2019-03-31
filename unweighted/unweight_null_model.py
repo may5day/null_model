@@ -175,9 +175,8 @@ def random_0k(G0, n_swap=1, max_tries=100, connected=1):
             count_swap = count_swap + 1
 
         if n_try >= max_tries:
-            e = ('Maximum number of swap attempts (%s) exceeded ' %
+            print('Maximum number of swap attempts (%s) exceeded ' %
                  n_try + 'before desired swaps achieved (%s).' % n_swap)
-            print e
             break
     return G
 
@@ -214,9 +213,8 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:
         if n_try >= max_tries:
-            e = ('Maximum number of swap attempts (%s) exceeded ' %
+            print('Maximum number of swap attempts (%s) exceeded ' %
                  n_try + 'before desired swaps achieved (%s).' % n_swap)
-            print(e)
             break
         n_try += 1
 
@@ -285,9 +283,8 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:
         if n_try >= max_tries:
-            e = ('Maximum number of swap attempts (%s) exceeded ' %
+            print('Maximum number of swap attempts (%s) exceeded ' %
                  n_try + 'before desired swaps achieved (%s).' % n_swap)
-            print(e)
             break
         n_try += 1
 
@@ -357,9 +354,8 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:
         if n_try >= max_tries:
-            e = ('Maximum number of swap attempts (%s) exceeded ' %
+            print('Maximum number of swap attempts (%s) exceeded ' %
                  n_try + 'before desired swaps achieved (%s).' % n_swap)
-            print(e)
             break
         n_try += 1
 
@@ -448,9 +444,8 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap:
         if n_try >= max_tries:
-            e = ('Maximum number of swap attempts (%s) exceeded ' %
+            print('Maximum number of swap attempts (%s) exceeded ' %
                  n_try + 'before desired swaps achieved (%s).' % n_swap)
-            print(e)
             break
         n_try += 1
 
@@ -544,9 +539,8 @@ def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1):
 
     while count_swap < n_swap and len(hubs_edges) < len_possible_edges:
         if n_try >= max_tries:
-            e = ('Maximum number of swap attempts (%s) exceeded ' %
+            print('Maximum number of swap attempts (%s) exceeded ' %
                  n_try + 'before desired swaps achieved (%s).' % n_swap)
-            print(e)
             break
         n_try += 1
         #  choose two hubs randomly
@@ -696,7 +690,7 @@ def assort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
     while count_swap < n_swap:
         n_try += 1
 
-        ## make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
+        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -725,9 +719,8 @@ def assort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
                     G.add_edge(u, v)
                     continue
         if n_try >= max_tries:
-            e = ('Maximum number of swap attempts (%s) exceeded ' %
+            print('Maximum number of swap attempts (%s) exceeded ' %
                  n_try + 'before desired swaps achieved (%s).' % n_swap)
-            print(e)
             break
         count_swap += 1
     return G
@@ -798,9 +791,8 @@ def disassort_mixing(G0, k=10, n_swap=1, max_tries=100, connected=1):
                     G.add_edge(u, v)
                     continue
         if n_try >= max_tries:
-            e = ('Maximum number of swap attempts (%s) exceeded ' %
+            print('Maximum number of swap attempts (%s) exceeded ' %
                  n_try + 'before desired swaps achieved (%s).' % n_swap)
-            print(e)
             break
         count_swap += 1
     return G
@@ -830,7 +822,7 @@ def random_1kd(G0, n_swap=1, max_tries=100):
     if len(G0) < 4:
         raise nx.NetworkXError("Graph has less than four nodes.")
     G = copy.deepcopy(G0)
-    n = 0
+    n_try = 0
     count_swap = 0
     while count_swap < n_swap:
         (u, v), (x, y) = random.sample(G.edges(), 2)
@@ -843,10 +835,9 @@ def random_1kd(G0, n_swap=1, max_tries=100):
             G.remove_edge(u, v)
             G.remove_edge(x, y)
             count_swap += 1
-        if n >= max_tries:
-            e = ('Maximum number of swap attempts (%s) exceeded ' %
-                 n + 'before desired swaps achieved (%s).' % n_swap)
-            print e
+        if n_try >= max_tries:
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
+        n_try += 1
     return G
