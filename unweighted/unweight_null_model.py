@@ -141,9 +141,9 @@ def random_0k(G0, n_swap=1, max_tries=100, connected=1):
         raise nx.NetworkXError("This graph has less than three nodes.")
 
     G = copy.deepcopy(G0)
-    # swap times
+    # Number of attempts to swap
     n_try = 0
-    # number of effective swaps
+    # Number of effective swaps
     count_swap = 0
     edges = G.edges()
     nodes = G.nodes()
@@ -218,7 +218,7 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
             break
         n_try += 1
 
-        # make sure the degree distribution unchanged,choose two edges
+        # Keep the degree distribution unchanged,choose two edges
         # (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
@@ -251,7 +251,7 @@ def random_1k(G0, n_swap=1, max_tries=100, connected=1):
 
 
 def random_2k(G0, n_swap=1, max_tries=100, connected=1):
-	"""Returns a 2K null model beased on random reconnection algorithm
+    """Returns a 2K null model beased on random reconnection algorithm
 
     Parameters
     ----------
@@ -269,14 +269,11 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
     The 2K null models have the same joint degree distribution as the original graph
 
     """
-
     # make sure the 2K-characteristic unchanged and the graph is connected
     # swap the edges inside the community
     judge_error(G0, n_swap, max_tries, connected)
-
     n_try = 0
     count_swap = 0
-
     G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
@@ -323,7 +320,7 @@ def random_2k(G0, n_swap=1, max_tries=100, connected=1):
 
 
 def random_25k(G0, n_swap=1, max_tries=100, connected=1):
-	"""Returns a 2.5K null model beased on random reconnection algorithm
+    """Returns a 2.5K null model beased on random reconnection algorithm
 
     Parameters
     ----------
@@ -575,7 +572,7 @@ def rich_club_create(G0, k=1, n_swap=1, max_tries=100, connected=1):
         if n_try >= max_tries:
             print('Maximum number of attempts (%s) exceeded ' % n_try)
             break
-        count_swap = count_swap + 1
+        count_swap += 1
     return G
 
 
