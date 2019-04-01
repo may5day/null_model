@@ -23,8 +23,8 @@ __all__ = ['judge_error'
            'inter_random_3k',
            'inner_community_swap',
            'inter_community_swap',
-           'Q_increase',
-           'Q_decrease', ]
+           'Q_enhense',
+           'Q_weaken', ]
 
 
 def judge_error(G0, n_swap, max_tries, connected):
@@ -118,9 +118,10 @@ def inner_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -135,12 +136,13 @@ def inner_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团内部连边
+            # Make sure the chosen edges are inner community.
             if edge_in_community(node_community, (u, v)) == 1 and edge_in_community(node_community, (x, y)) == 1:
-                # 保证新生成的边还是社团内连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 1 and edge_in_community(node_community, (v, x)) == 1:
-
-                    if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Make sure the new edges are not exist in the original
+                    # graph.
+                    if (y not in G[u]) and (v not in G[x]):
                         G.add_edge(u, y)
                         G.add_edge(v, x)
 
@@ -192,9 +194,10 @@ def inner_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -209,13 +212,16 @@ def inner_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团内部连边
+            # Make sure the chosen edges are inner community.
             if edge_in_community(node_community, (u, v)) == 1 and edge_in_community(node_community, (x, y)) == 1:
-                # 保证新生成的边还是社团内连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 1 and edge_in_community(node_community, (v, x)) == 1:
-
-                    if G.degree(v) == G.degree(y):  # 保证节点的度匹配特性不变
-                        if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Keep the degree matching characteristic of nodes
+                    # unchanged.
+                    if G.degree(v) == G.degree(y):
+                        # Make sure the new edges are not exist in the original
+                        # graph.
+                        if (y not in G[u]) and (v not in G[x]):
                             G.add_edge(u, y)
                             G.add_edge(v, x)
 
@@ -267,9 +273,10 @@ def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -284,13 +291,16 @@ def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团内部连边
+            # Make sure the chosen edges are inner community.
             if edge_in_community(node_community, (u, v)) == 1 and edge_in_community(node_community, (x, y)) == 1:
-                # 保证新生成的边还是社团内连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 1 and edge_in_community(node_community, (v, x)) == 1:
-
-                    if G.degree(v) == G.degree(y):  # 保证节点的度匹配特性不变
-                        if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Keep the degree matching characteristic of nodes
+                    # unchanged.
+                    if G.degree(v) == G.degree(y):
+                        # Make sure the new edges are not exist in the original
+                        # graph.
+                        if (y not in G[u]) and (v not in G[x]):
                             G.add_edge(u, y)
                             G.add_edge(v, x)
 
@@ -299,9 +309,7 @@ def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
                             degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
                                 [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
-                            # 先找到四个节点以及他们邻居节点的集合，然后取出这些节点所有的度值对应的节点，格式为（度，节点）形式的列表
 
-                            # 找到每个度对应的所有节点，具体形式为
                             D = count_degree_nodes(degree_node_list)
                             for i in range(len(D)):
                                 avcG0 = nx.average_clustering(
@@ -309,15 +317,18 @@ def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                 avcG = nx.average_clustering(
                                     G, nodes=D.values()[i], weight=None, count_zeros=True)
                                 i += 1
-                                if avcG0 != avcG:  # 若置乱前后度相关的聚类系数不同，则撤销此次置乱操作
+                                # If the degree-related clustering coefficient changed after scrambling
+                                # withdraw this operation about scrambling.
+                                if avcG0 != avcG:
                                     G.add_edge(u, v)
                                     G.add_edge(x, y)
                                     G.remove_edge(u, y)
                                     G.remove_edge(x, v)
                                     break
                                 # if connected = 1 but the original graph is not connected fully,
-                                # withdraw the operation about the swap of edges.
-                                if connected == 1:       
+                                # withdraw the operation about the swap of
+                                # edges.
+                                if connected == 1:
                                     if not nx.is_connected(G):
                                         G.add_edge(u, v)
                                         G.add_edge(x, y)
@@ -362,9 +373,10 @@ def inner_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -379,28 +391,34 @@ def inner_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团间连边
+            # Make sure the chosen edges are inter communities.
             if edge_in_community(node_community, (u, v)) == 1 and edge_in_community(node_community, (x, y)) == 1:
-                # 保证新生成的边还是社团内连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 1 and edge_in_community(node_community, (v, x)) == 1:
-                    if G.degree(v) == G.degree(y):  # 保证节点的度匹配特性不变
+                    # Keep the degree matching characteristic of nodes
+                    # unchanged.
+                    if G.degree(v) == G.degree(y):
 
-                        if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                        # Make sure the new edges are not exist in the original
+                        # graph.
+                        if (y not in G[u]) and (v not in G[x]):
                             G.add_edge(u, y)
                             G.add_edge(v, x)
 
                             G.remove_edge(u, v)
                             G.remove_edge(x, y)
-
-                            # 找到四个节点以及他们邻居节点的集合
+                            # Get the set of four nodes and their neighbor
+                            # nodes.
                             node_list = [
                                 u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])
-                            # 计算旧网络中4个节点以及他们邻居节点的聚类系数
+                            # Calculate the clustering coefficient of all these
+                            # nodes in the original graph and the new graph.
                             avcG0 = nx.clustering(G0, nodes=node_list)
-                            # 计算新网络中4个节点以及他们邻居节点的聚类系数
                             avcG = nx.clustering(G, nodes=node_list)
-
-                            if avcG0 != avcG:  # 保证涉及到的四个节点聚类系数相同:若聚类系数不同，则撤回交换边的操作
+                            # Keep the clustering coefficient of four nodes equal.
+                            # Withdraw the operation about the swap of edges,
+                            # otherwise.
+                            if avcG0 != avcG:
                                 G.add_edge(u, v)
                                 G.add_edge(x, y)
                                 G.remove_edge(u, y)
@@ -452,9 +470,10 @@ def inter_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -469,12 +488,14 @@ def inter_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated.
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团内部连边
+            # Make sure the chosen edges are inner community.
             if edge_in_community(node_community, (u, v)) == 0 and edge_in_community(node_community, (x, y)) == 0:
-                # 保证新生成的边还是社团内连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 0 and edge_in_community(node_community, (v, x)) == 0:
 
-                    if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Make sure the new edges are not exist in the original
+                    # graph.
+                    if (y not in G[u]) and (v not in G[x]):
                         G.add_edge(u, y)
                         G.add_edge(v, x)
 
@@ -526,13 +547,15 @@ def inter_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
-        # Keep the degree distribution unchanged,choose two edges (u-v,x-y) randomly
+        # Keep the degree distribution unchanged,choose two edges (u-v,x-y)
+        # randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -542,13 +565,16 @@ def inter_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated.
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团内部连边
+            # Make sure the chosen edges are inner community.
             if edge_in_community(node_community, (u, v)) == 0 and edge_in_community(node_community, (x, y)) == 0:
-                # 保证新生成的边还是社团内连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 0 and edge_in_community(node_community, (v, x)) == 0:
-
-                    if G.degree(v) == G.degree(y):  # 保证节点的度匹配特性不变
-                        if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Keep the degree matching characteristic of nodes
+                    # unchanged.
+                    if G.degree(v) == G.degree(y):
+                        # Make sure the new edges are not exist in the original
+                        # graph.
+                        if (y not in G[u]) and (v not in G[x]):
                             G.add_edge(u, y)
                             G.add_edge(v, x)
 
@@ -600,9 +626,10 @@ def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -617,13 +644,16 @@ def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated.
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团内部连边
+            # Make sure the chosen edges are inner community.
             if edge_in_community(node_community, (u, v)) == 0 and edge_in_community(node_community, (x, y)) == 0:
-                # 保证新生成的边还是社团内连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 0 and edge_in_community(node_community, (v, x)) == 0:
-
-                    if G.degree(v) == G.degree(y):  # 保证节点的度匹配特性不变
-                        if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Keep the degree matching characteristic of nodes
+                    # unchanged.
+                    if G.degree(v) == G.degree(y):
+                        # Make sure the new edges are not exist in the original
+                        # graph.
+                        if (y not in G[u]) and (v not in G[x]):
                             G.add_edge(u, y)
                             G.add_edge(v, x)
 
@@ -632,9 +662,7 @@ def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
 
                             degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
                                 [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
-                            # 先找到四个节点以及他们邻居节点的集合，然后取出这些节点所有的度值对应的节点，格式为（度，节点）形式的列表
 
-                            # 找到每个度对应的所有节点，具体形式为
                             D = count_degree_nodes(degree_node_list)
                             for i in range(len(D)):
                                 avcG0 = nx.average_clustering(
@@ -642,14 +670,17 @@ def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                 avcG = nx.average_clustering(
                                     G, nodes=D.values()[i], weight=None, count_zeros=True)
                                 i += 1
-                                if avcG0 != avcG:  # 若置乱前后度相关的聚类系数不同，则撤销此次置乱操作
+                                # If the degree-related clustering coefficient changed after scrambling
+                                # withdraw this operation about scrambling.
+                                if avcG0 != avcG:
                                     G.add_edge(u, v)
                                     G.add_edge(x, y)
                                     G.remove_edge(u, y)
                                     G.remove_edge(x, v)
                                     break
                                 # if connected = 1 but the original graph is not connected fully,
-                                # withdraw the operation about the swap of edges.
+                                # withdraw the operation about the swap of
+                                # edges.
                                 if connected == 1:
                                     if not nx.is_connected(G):
                                         G.add_edge(u, v)
@@ -695,9 +726,10 @@ def inter_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -712,28 +744,35 @@ def inter_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated.
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团间连边
+            # Make sure the chosen edges are inter communities.
             if edge_in_community(node_community, (u, v)) == 0 and edge_in_community(node_community, (x, y)) == 0:
-                # 保证新生成的边还是社团内连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 0 and edge_in_community(node_community, (v, x)) == 0:
-                    if G.degree(v) == G.degree(y):  # 保证节点的度匹配特性不变
+                    # Keep the degree matching characteristic of nodes
+                    # unchanged.
+                    if G.degree(v) == G.degree(y):
 
-                        if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                        # Make sure the new edges are not exist in the original
+                        # graph.
+                        if (y not in G[u]) and (v not in G[x]):
                             G.add_edge(u, y)
                             G.add_edge(v, x)
 
                             G.remove_edge(u, v)
                             G.remove_edge(x, y)
 
-                            # 找到四个节点以及他们邻居节点的集合
+                            # Get the set of four nodes and their neighbor
+                            # nodes.
                             node_list = [
                                 u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])
-                            # 计算旧网络中4个节点以及他们邻居节点的聚类系数
+                            # Calculate the clustering coefficient of all these
+                            # nodes in the original graph and the new graph.
                             avcG0 = nx.clustering(G0, nodes=node_list)
-                            # 计算新网络中4个节点以及他们邻居节点的聚类系数
                             avcG = nx.clustering(G, nodes=node_list)
-
-                            if avcG0 != avcG:  # 保证涉及到的四个节点聚类系数相同:若聚类系数不同，则撤回交换边的操作
+                            # Keep the clustering coefficient of four nodes equal.
+                            # Withdraw the operation about the swap of edges,
+                            # otherwise.
+                            if avcG0 != avcG:
                                 G.add_edge(u, v)
                                 G.add_edge(x, y)
                                 G.remove_edge(u, y)
@@ -782,9 +821,10 @@ def inner_community_swap(G0, node_community, n_swap=1, max_tries=100):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -799,11 +839,13 @@ def inner_community_swap(G0, node_community, n_swap=1, max_tries=100):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated.
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团内连边
+            # Make sure the chosen edges created are inner community.
             if edge_in_community(node_community, (u, v)) == 1 and edge_in_community(node_community, (x, y)) == 1:
-                # 保证新生成的边还是社团内连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 1 and edge_in_community(node_community, (v, x)) == 1:
-                    if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Make sure the new edges are not exist in the original
+                    # graph.
+                    if (y not in G[u]) and (v not in G[x]):
                         G.add_edge(u, y)
                         G.add_edge(v, x)
 
@@ -844,9 +886,10 @@ def inter_community_swap(G0, node_community, n_swap=1, max_tries=100):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -861,11 +904,13 @@ def inter_community_swap(G0, node_community, n_swap=1, max_tries=100):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated.
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边是社团间部连边
+            # Make sure the chosen edges are inter communities.
             if edge_in_community(node_community, (u, v)) == 0 and edge_in_community(node_community, (x, y)) == 0:
-                # 保证新生成的边是社团间的连边
+                # Make sure the edges created are inter communities.
                 if edge_in_community(node_community, (u, y)) == 0 and edge_in_community(node_community, (v, x)) == 0:
-                    if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Make sure the new edges are not exist in the original
+                    # graph.
+                    if (y not in G[u]) and (v not in G[x]):
                         G.add_edge(u, y)
                         G.add_edge(v, x)
 
@@ -877,7 +922,7 @@ def inter_community_swap(G0, node_community, n_swap=1, max_tries=100):
     return G
 
 
-def Q_increase(G0, node_community, n_swap=1, max_tries=100):
+def Q_enhense(G0, node_community, n_swap=1, max_tries=100):
     """
 
     Parameters
@@ -893,12 +938,11 @@ def Q_increase(G0, node_community, n_swap=1, max_tries=100):
     Notes
     -----
     Keep the degree distribution unchanged.
-    Increase Q.
+    Enhance the characteristics of the community structure
 
     """
-    # 保证度分布不变的情况下，增强社团结构特性
 
-    udge_error(G0, n_swap, max_tries, connected)
+    judge_error(G0, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
@@ -909,9 +953,10 @@ def Q_increase(G0, node_community, n_swap=1, max_tries=100):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -926,11 +971,13 @@ def Q_increase(G0, node_community, n_swap=1, max_tries=100):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated.
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边为社团间连边
+            # Make sure the chosen edges are inter communities.
             if edge_in_community(node_community, (u, v)) == 0 and edge_in_community(node_community, (x, y)) == 0:
-                # 保证新生成的边是内部连边
+                # Make sure the edges created are inner community.
                 if edge_in_community(node_community, (u, y)) == 1 and edge_in_community(node_community, (v, x)) == 1:
-                    if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Make sure the new edges are not exist in the original
+                    # graph.
+                    if (y not in G[u]) and (v not in G[x]):
                         G.add_edge(u, y)
                         G.add_edge(v, x)
 
@@ -942,7 +989,7 @@ def Q_increase(G0, node_community, n_swap=1, max_tries=100):
     return G
 
 
-def Q_decrease(G0, node_community, n_swap=1, max_tries=100):
+def Q_weaken(G0, node_community, n_swap=1, max_tries=100):
     """
 
     Parameters
@@ -958,10 +1005,10 @@ def Q_decrease(G0, node_community, n_swap=1, max_tries=100):
     Notes
     -----
     Keep the degree distribution unchanged.
-    Decrease Q.
+    Weaken the characteristics of the community structure
 
     """
-    # 保证度分布不变的情况下，减弱社团结构特性
+
 
     udge_error(G0, n_swap, max_tries, connected)
 
@@ -974,9 +1021,10 @@ def Q_decrease(G0, node_community, n_swap=1, max_tries=100):
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:  # 有效交换次数小于规定交换次数
+    while count_swap < n_swap:
         if n_try >= max_tries:
-            print('尝试次数 (%s) 已超过允许的最大次数' % n_try + '有效交换次数（%s)' % count_swap)
+            print('Maximum number of swap attempts (%s) exceeded ' %
+                 n_try + 'before desired swaps achieved (%s)' % count_swap)
             break
         n_try += 1
 
@@ -991,11 +1039,13 @@ def Q_decrease(G0, node_community, n_swap=1, max_tries=100):
         y = random.choice(list(G[x]))
         # Make sure the four nodes are not repeated.
         if len(set([u, v, x, y])) == 4:
-            # 保证所取的连边是社团内部连边
+            # Make sure the chosen edges are inner community.
             if edge_in_community(node_community, (u, v)) == 1 and edge_in_community(node_community, (x, y)) == 1:
-                # 保证新生成的边是社团间的连边
+                # Make sure the edges created are inter communities.
                 if edge_in_community(node_community, (u, y)) == 0 and edge_in_community(node_community, (v, x)) == 0:
-                    if (y not in G[u]) and (v not in G[x]):  # 保证新生成的连边是原网络中不存在的边
+                    # Make sure the new edges are not exist in the original
+                    # graph.
+                    if (y not in G[u]) and (v not in G[x]):
                         G.add_edge(u, y)
                         G.add_edge(v, x)
 
