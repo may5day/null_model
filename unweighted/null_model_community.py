@@ -27,14 +27,14 @@ __all__ = ['judge_error'
            'Q_weaken', ]
 
 
-def judge_error(G0, n_swap, max_tries, connected):
-    if not nx.is_connected(G0):
+def judge_error(G, n_swap, max_tries, connected):
+    if not nx.is_connected(G):
         raise nx.NetworkXError("For connected graphs only.")
-    if G0.is_directed():
+    if G.is_directed():
         raise nx.NetworkXError("For undirected graphs only.")
     if n_swap > max_tries:
         raise nx.NetworkXError("Number of swaps > number of tries allowed.")
-    if len(G0) < 3:
+    if len(G) < 3:
         raise nx.NetworkXError("This graph has less than three nodes.")
 
 
@@ -86,18 +86,18 @@ def count_degree_nodes(degree_nodes):
     return degree_dict
 
 
-def inner_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
+def inner_random_1k(G, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 1K null model beased on random reconnection algorithm inner community
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
     connected : int
         keep the connectivity of the graph or not.
         1 : keep,    0 : not keep
@@ -108,20 +108,19 @@ def inner_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inner communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -157,22 +156,22 @@ def inner_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                             G.remove_edge(u, y)
                             G.remove_edge(x, v)
                             continue
-                    count_swap += 1
+                    swapcount += 1
     return G
 
 
-def inner_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
+def inner_random_2k(G, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 2K null model beased on random reconnection algorithm inner community
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
     connected : int
         keep the connectivity of the graph or not.
         1 : keep,    0 : not keep
@@ -183,21 +182,20 @@ def inner_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inner communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -236,22 +234,22 @@ def inner_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                     G.remove_edge(u, y)
                                     G.remove_edge(x, v)
                                     continue
-                            count_swap += 1
+                            swapcount += 1
     return G
 
 
-def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
+def inner_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 2.5K null model beased on random reconnection algorithm inner community
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
     connected : int
         keep the connectivity of the graph or not.
         1 : keep,    0 : not keep
@@ -262,21 +260,20 @@ def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inner communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -307,19 +304,19 @@ def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                             G.remove_edge(u, v)
                             G.remove_edge(x, y)
 
-                            degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
+                            degree_node_list = map(lambda t: (t[1], t[0]), G.degree(
                                 [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
 
                             D = count_degree_nodes(degree_node_list)
                             for i in range(len(D)):
-                                avcG0 = nx.average_clustering(
-                                    G0, nodes=D.values()[i], weight=None, count_zeros=True)
+                                avcG = nx.average_clustering(
+                                    G, nodes=D.values()[i], weight=None, count_zeros=True)
                                 avcG = nx.average_clustering(
                                     G, nodes=D.values()[i], weight=None, count_zeros=True)
                                 i += 1
                                 # If the degree-related clustering coefficient changed after scrambling
                                 # withdraw this operation about scrambling.
-                                if avcG0 != avcG:
+                                if avcG != avcG:
                                     G.add_edge(u, v)
                                     G.add_edge(x, y)
                                     G.remove_edge(u, y)
@@ -335,23 +332,23 @@ def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                         G.remove_edge(u, y)
                                         G.remove_edge(x, v)
                                         continue
-                                count_swap += 1
+                                swapcount += 1
 
     return G
 
 
-def inner_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
+def inner_random_3k(G, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 3K null model beased on random reconnection algorithm inner community
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
     connected : int
         keep the connectivity of the graph or not.
         1 : keep,    0 : not keep
@@ -362,21 +359,20 @@ def inner_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inner communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -413,12 +409,12 @@ def inner_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                 u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])
                             # Calculate the clustering coefficient of all these
                             # nodes in the original graph and the new graph.
-                            avcG0 = nx.clustering(G0, nodes=node_list)
+                            avcG = nx.clustering(G, nodes=node_list)
                             avcG = nx.clustering(G, nodes=node_list)
                             # Keep the clustering coefficient of four nodes equal.
                             # Withdraw the operation about the swap of edges,
                             # otherwise.
-                            if avcG0 != avcG:
+                            if avcG != avcG:
                                 G.add_edge(u, v)
                                 G.add_edge(x, y)
                                 G.remove_edge(u, y)
@@ -433,22 +429,22 @@ def inner_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                     G.remove_edge(u, y)
                                     G.remove_edge(x, v)
                                     continue
-                            count_swap += 1
+                            swapcount += 1
     return G
 
 
-def inter_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
+def inter_random_1k(G, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 1K null model beased on random reconnection algorithm inter communities
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
     connected : int
         keep the connectivity of the graph or not.
         1 : keep,    0 : not keep
@@ -459,21 +455,20 @@ def inter_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inter communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -510,22 +505,22 @@ def inter_random_1k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                             G.remove_edge(u, y)
                             G.remove_edge(x, v)
                             continue
-                    count_swap += 1
+                    swapcount += 1
     return G
 
 
-def inter_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
+def inter_random_2k(G, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 2K null model beased on random reconnection algorithm inter communities
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
     connected : int
         keep the connectivity of the graph or not.
         1 : keep,    0 : not keep
@@ -536,21 +531,20 @@ def inter_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inter communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -589,22 +583,22 @@ def inter_random_2k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                     G.remove_edge(u, y)
                                     G.remove_edge(x, v)
                                     continue
-                            count_swap += 1
+                            swapcount += 1
     return G
 
 
-def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
+def inter_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 2.5K null model beased on random reconnection algorithm inter communities
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
     connected : int
         keep the connectivity of the graph or not.
         1 : keep,    0 : not keep
@@ -615,21 +609,20 @@ def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inter communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -660,19 +653,19 @@ def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                             G.remove_edge(u, v)
                             G.remove_edge(x, y)
 
-                            degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
+                            degree_node_list = map(lambda t: (t[1], t[0]), G.degree(
                                 [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
 
                             D = count_degree_nodes(degree_node_list)
                             for i in range(len(D)):
-                                avcG0 = nx.average_clustering(
-                                    G0, nodes=D.values()[i], weight=None, count_zeros=True)
+                                avcG = nx.average_clustering(
+                                    G, nodes=D.values()[i], weight=None, count_zeros=True)
                                 avcG = nx.average_clustering(
                                     G, nodes=D.values()[i], weight=None, count_zeros=True)
                                 i += 1
                                 # If the degree-related clustering coefficient changed after scrambling
                                 # withdraw this operation about scrambling.
-                                if avcG0 != avcG:
+                                if avcG != avcG:
                                     G.add_edge(u, v)
                                     G.add_edge(x, y)
                                     G.remove_edge(u, y)
@@ -688,23 +681,23 @@ def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                         G.remove_edge(u, y)
                                         G.remove_edge(x, v)
                                         continue
-                                count_swap += 1
+                                swapcount += 1
 
     return G
 
 
-def inter_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
+def inter_random_3k(G, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 3K null model beased on random reconnection algorithm inter communities
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
     connected : int
         keep the connectivity of the graph or not.
         1 : keep,    0 : not keep
@@ -715,21 +708,20 @@ def inter_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inter communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -767,12 +759,12 @@ def inter_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                 u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])
                             # Calculate the clustering coefficient of all these
                             # nodes in the original graph and the new graph.
-                            avcG0 = nx.clustering(G0, nodes=node_list)
+                            avcG = nx.clustering(G, nodes=node_list)
                             avcG = nx.clustering(G, nodes=node_list)
                             # Keep the clustering coefficient of four nodes equal.
                             # Withdraw the operation about the swap of edges,
                             # otherwise.
-                            if avcG0 != avcG:
+                            if avcG != avcG:
                                 G.add_edge(u, v)
                                 G.add_edge(x, y)
                                 G.remove_edge(u, y)
@@ -787,22 +779,22 @@ def inter_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                                     G.remove_edge(u, y)
                                     G.remove_edge(x, v)
                                     continue
-                            count_swap += 1
+                            swapcount += 1
     return G
 
 
-def inner_community_swap(G0, node_community, n_swap=1, max_tries=100):
+def inner_community_swap(G, node_community, n_swap=1, max_tries=100):
     """
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
 
     Notes
     -----
@@ -810,21 +802,20 @@ def inner_community_swap(G0, node_community, n_swap=1, max_tries=100):
     Swap edges inner communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -852,22 +843,22 @@ def inner_community_swap(G0, node_community, n_swap=1, max_tries=100):
                         G.remove_edge(u, v)
                         G.remove_edge(x, y)
 
-                        count_swap += 1
+                        swapcount += 1
     return G
 
 
-def inter_community_swap(G0, node_community, n_swap=1, max_tries=100):
+def inter_community_swap(G, node_community, n_swap=1, max_tries=100):
     """
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
 
     Notes
     -----
@@ -875,21 +866,20 @@ def inter_community_swap(G0, node_community, n_swap=1, max_tries=100):
     Swap edges inter communities.
 
     """
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -917,23 +907,23 @@ def inter_community_swap(G0, node_community, n_swap=1, max_tries=100):
                         G.remove_edge(u, v)
                         G.remove_edge(x, y)
 
-                        count_swap += 1
+                        swapcount += 1
 
     return G
 
 
-def Q_enhense(G0, node_community, n_swap=1, max_tries=100):
+def Q_enhense(G, node_community, n_swap=1, max_tries=100):
     """
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
 
     Notes
     -----
@@ -942,21 +932,20 @@ def Q_enhense(G0, node_community, n_swap=1, max_tries=100):
 
     """
 
-    judge_error(G0, n_swap, max_tries, connected)
+    judge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -984,23 +973,23 @@ def Q_enhense(G0, node_community, n_swap=1, max_tries=100):
                         G.remove_edge(u, v)
                         G.remove_edge(x, y)
 
-                        count_swap += 1
+                        swapcount += 1
 
     return G
 
 
-def Q_weaken(G0, node_community, n_swap=1, max_tries=100):
+def Q_weaken(G, node_community, n_swap=1, max_tries=100):
     """
 
     Parameters
     ----------
-    G0 : undirected and unweighted graph
+    G : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
-        coefficient of change successfully
+        Number of double-edge swaps to perform
     max_tries : int (default = 100)
-        number of changes
+        Maximum number of attempts to swap edges
 
     Notes
     -----
@@ -1009,22 +998,20 @@ def Q_weaken(G0, node_community, n_swap=1, max_tries=100):
 
     """
 
-
-    udge_error(G0, n_swap, max_tries, connected)
+    udge_error(G, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
-    count_swap = 0
+    swapcount = 0
 
-    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
-    while count_swap < n_swap:
+    while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s)' % count_swap)
+                  n_try + 'before desired swaps achieved (%s)' % swapcount)
             break
         n_try += 1
 
@@ -1052,6 +1039,6 @@ def Q_weaken(G0, node_community, n_swap=1, max_tries=100):
                         G.remove_edge(u, v)
                         G.remove_edge(x, y)
 
-                        count_swap += 1
+                        swapcount += 1
 
     return G
