@@ -1,0 +1,37 @@
+%%%%%%%%%%%%STEP 1: DATA PREPARITION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%  FIRST real data set 1: 16 tribes 
+%%%%the true clustering result is (4	6	7	8	11	12)
+%%%%% (1	2	15	16) and (5	9	10	13	14)
+% %%%%%with or without refinement; it working
+% whole=textread('gama.txt');
+% adj_pos=whole(1:16,:);
+% adj_neg=whole(17:32,:);
+% adj=adj_pos-adj_neg;
+% Ori_adj=adj
+% %%%%%%%%%%%%%%% the true clustering result C_true
+% C_true=zeros(1,16);
+% i1=[3 4	6	7	8	11	12]
+% C_true(i1)=1;
+% i2=[1	2	15	16];
+% C_true(i2)=2;
+% i3=[5	9	10	13	14];
+% C_true(i3)=3;
+
+
+%%%%%%%%%%%%%%%%%%%%%2nd real data: Slovene Parliamentary Parties 1994:
+%%%%%%%%%%%%%%%%%%%%% the true clustering result is (2	4	5	7	10)
+%%%%% and (1	3	6	8	9); with or without refinement, both working
+% 
+% adj=textread('slovene.txt')
+% Ori_adj=adj;
+% 
+% C_true=zeros(1,10);
+% i1=[2 4 5 7 10]
+% C_true(i1)=1;
+% i2=[1 3 6 8 9];
+% C_true(i2)=2;
+
+%%%%%%%%%%%%%third data set (allowing overlapping)
+adj=textread('overlaping.txt')
+adj=adj+adj';
