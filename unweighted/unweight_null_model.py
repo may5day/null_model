@@ -311,12 +311,12 @@ def random_2k(G, n_swap=1, max_tries=100, connected=1):
     return G
 
 
-def random_25k(G, n_swap=1, max_tries=100, connected=1):
+def random_25k(G0, n_swap=1, max_tries=100, connected=1):
     """Returns a 2.5K null model beased on random reconnection algorithm
 
     Parameters
     ----------
-    G : undirected and unweighted graph
+    G0 : undirected and unweighted graph
     n_swap : int (default = 1)
         Number of double-edge swaps to perform
     max_tries : int (default = 100)
@@ -332,11 +332,11 @@ def random_25k(G, n_swap=1, max_tries=100, connected=1):
     """
     # make sure the 2K-characteristic unchanged and the graph is connected
     # swap the edges inside the community
-    judge_error(G, n_swap, max_tries, connected)
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     swapcount = 0
-
+    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
@@ -367,19 +367,19 @@ def random_25k(G, n_swap=1, max_tries=100, connected=1):
                     G.remove_edge(u, v)
                     G.remove_edge(x, y)
                     # get the degree of four nodes and their neighbor nodes, degree_node_list : [[degree,node]]
-                    degree_node_list = map(lambda t: (t[1], t[0]), G.degree(
+                    degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
                         [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
                     # get all nodes of each degree :{degree:[node1,node2...]}
                     dict_degree = count_degree_nodes(degree_node_list)
 
                     for i in range(len(dict_degree)):
-                        avcG = nx.average_clustering(
-                            G, nodes=dict_degree.values()[i], weight=None, count_zeros=True)
+                        avcG0 = nx.average_clustering(
+                            G0, nodes=dict_degree.values()[i], weight=None, count_zeros=True)
                         avcG = nx.average_clustering(
                             G, nodes=dict_degree.values()[i], weight=None, count_zeros=True)
                         i += 1
                     # if the clustering coefficient about dgree changed after scrambling ,withdraw this operation
-                    if avcG != avcG:
+                    if avcG0 != avcG:
                         G.add_edge(u, v)
                         G.add_edge(x, y)
                         G.remove_edge(u, y)
@@ -399,12 +399,12 @@ def random_25k(G, n_swap=1, max_tries=100, connected=1):
     return G
 
 
-def random_3k(G, n_swap=1, max_tries=100, connected=1):
+def random_3k(G0, n_swap=1, max_tries=100, connected=1):
     """Returns a 3K null model beased on random reconnection algorithm
 
     Parameters
     ----------
-    G : undirected and unweighted graph
+    G0 : undirected and unweighted graph
     n_swap : int (default = 1)
         Number of double-edge swaps to perform
     max_tries : int (default = 100)
@@ -421,11 +421,11 @@ def random_3k(G, n_swap=1, max_tries=100, connected=1):
 
     # make sure the 2K-characteristic unchanged and the graph is connected
     # swap the edges inside the community
-    judge_error(G, n_swap, max_tries, connected)
+    judge_error(G0, n_swap, max_tries, connected)
 
     n_try = 0
     swapcount = 0
-
+    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
@@ -460,10 +460,10 @@ def random_3k(G, n_swap=1, max_tries=100, connected=1):
                     node_list = [u, v, x, y] + \
                         list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])
                     # cal the clustering coefficient of the four nodes in the original and the new graph
-                    avcG = nx.clustering(G, nodes=node_list)
+                    avcG0 = nx.clustering(G, nodes=node_list)
                     avcG = nx.clustering(G, nodes=node_list)
                     # if the clustering coefficient about dgree changed after scrambling ,withdraw this operation
-                    if avcG != avcG:
+                    if avcG0 != avcG:
                         G.add_edge(u, v)
                         G.add_edge(x, y)
                         G.remove_edge(u, y)
