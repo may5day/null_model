@@ -238,12 +238,12 @@ def inner_random_2k(G, node_community, n_swap=1, max_tries=100, connected=1):
     return G
 
 
-def inner_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
+def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 2.5K null model beased on random reconnection algorithm inner community
 
     Parameters
     ----------
-    G : undirected and unweighted graph
+    G0 : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
@@ -260,8 +260,8 @@ def inner_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inner communities.
 
     """
-    judge_error(G, n_swap, max_tries, connected)
-
+    judge_error(G0, n_swap, max_tries, connected)
+    G = copy.deepcopy(G0)
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
@@ -304,19 +304,19 @@ def inner_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
                             G.remove_edge(u, v)
                             G.remove_edge(x, y)
 
-                            degree_node_list = map(lambda t: (t[1], t[0]), G.degree(
+                            degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
                                 [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
 
                             D = count_degree_nodes(degree_node_list)
                             for i in range(len(D)):
-                                avcG = nx.average_clustering(
-                                    G, nodes=D.values()[i], weight=None, count_zeros=True)
+                                avcG0 = nx.average_clustering(
+                                    G0, nodes=D.values()[i], weight=None, count_zeros=True)
                                 avcG = nx.average_clustering(
                                     G, nodes=D.values()[i], weight=None, count_zeros=True)
                                 i += 1
                                 # If the degree-related clustering coefficient changed after scrambling
                                 # withdraw this operation about scrambling.
-                                if avcG != avcG:
+                                if avcG0 != avcG:
                                     G.add_edge(u, v)
                                     G.add_edge(x, y)
                                     G.remove_edge(u, y)
@@ -337,12 +337,12 @@ def inner_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
     return G
 
 
-def inner_random_3k(G, node_community, n_swap=1, max_tries=100, connected=1):
+def inner_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 3K null model beased on random reconnection algorithm inner community
 
     Parameters
     ----------
-    G : undirected and unweighted graph
+    G0 : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
@@ -359,13 +359,13 @@ def inner_random_3k(G, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inner communities.
 
     """
-    judge_error(G, n_swap, max_tries, connected)
+    judge_error(G0, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
     swapcount = 0
-
+    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
@@ -409,12 +409,12 @@ def inner_random_3k(G, node_community, n_swap=1, max_tries=100, connected=1):
                                 u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])
                             # Calculate the clustering coefficient of all these
                             # nodes in the original graph and the new graph.
-                            avcG = nx.clustering(G, nodes=node_list)
+                            avcG0 = nx.clustering(G0, nodes=node_list)
                             avcG = nx.clustering(G, nodes=node_list)
                             # Keep the clustering coefficient of four nodes equal.
                             # Withdraw the operation about the swap of edges,
                             # otherwise.
-                            if avcG != avcG:
+                            if avcG0 != avcG:
                                 G.add_edge(u, v)
                                 G.add_edge(x, y)
                                 G.remove_edge(u, y)
@@ -587,12 +587,12 @@ def inter_random_2k(G, node_community, n_swap=1, max_tries=100, connected=1):
     return G
 
 
-def inter_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
+def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 2.5K null model beased on random reconnection algorithm inter communities
 
     Parameters
     ----------
-    G : undirected and unweighted graph
+    G0 : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
@@ -609,13 +609,13 @@ def inter_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inter communities.
 
     """
-    judge_error(G, n_swap, max_tries, connected)
+    judge_error(G0, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
     swapcount = 0
-
+    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
@@ -653,19 +653,19 @@ def inter_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
                             G.remove_edge(u, v)
                             G.remove_edge(x, y)
 
-                            degree_node_list = map(lambda t: (t[1], t[0]), G.degree(
+                            degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
                                 [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
 
                             D = count_degree_nodes(degree_node_list)
                             for i in range(len(D)):
-                                avcG = nx.average_clustering(
-                                    G, nodes=D.values()[i], weight=None, count_zeros=True)
+                                avcG0 = nx.average_clustering(
+                                    G0, nodes=D.values()[i], weight=None, count_zeros=True)
                                 avcG = nx.average_clustering(
                                     G, nodes=D.values()[i], weight=None, count_zeros=True)
                                 i += 1
                                 # If the degree-related clustering coefficient changed after scrambling
                                 # withdraw this operation about scrambling.
-                                if avcG != avcG:
+                                if avcG0 != avcG:
                                     G.add_edge(u, v)
                                     G.add_edge(x, y)
                                     G.remove_edge(u, y)
@@ -686,12 +686,12 @@ def inter_random_25k(G, node_community, n_swap=1, max_tries=100, connected=1):
     return G
 
 
-def inter_random_3k(G, node_community, n_swap=1, max_tries=100, connected=1):
+def inter_random_3k(G0, node_community, n_swap=1, max_tries=100, connected=1):
     """Returns a 3K null model beased on random reconnection algorithm inter communities
 
     Parameters
     ----------
-    G : undirected and unweighted graph
+    G0 : undirected and unweighted graph
     node_community : list
         nodes and the communities they belong to
     n_swap : int (default = 1)
@@ -708,13 +708,13 @@ def inter_random_3k(G, node_community, n_swap=1, max_tries=100, connected=1):
     Swap edges inter communities.
 
     """
-    judge_error(G, n_swap, max_tries, connected)
+    judge_error(G0, n_swap, max_tries, connected)
 
     # Number of attempts to swap
     n_try = 0
     # Number of effective swaps
     swapcount = 0
-
+    G = copy.deepcopy(G0)
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)
 
@@ -759,12 +759,12 @@ def inter_random_3k(G, node_community, n_swap=1, max_tries=100, connected=1):
                                 u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])
                             # Calculate the clustering coefficient of all these
                             # nodes in the original graph and the new graph.
-                            avcG = nx.clustering(G, nodes=node_list)
+                            avcG0 = nx.clustering(G, nodes=node_list)
                             avcG = nx.clustering(G, nodes=node_list)
                             # Keep the clustering coefficient of four nodes equal.
                             # Withdraw the operation about the swap of edges,
                             # otherwise.
-                            if avcG != avcG:
+                            if avcG0 != avcG:
                                 G.add_edge(u, v)
                                 G.add_edge(x, y)
                                 G.remove_edge(u, y)
