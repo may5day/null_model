@@ -6,31 +6,32 @@ import copy
 - : weight=2
 """
 
-def sign_network_positive_swap(G0, nswap=1, max_tries=100):    
 
-    G=copy.deepcopy(G0)
-    n=0
-    swapcount=0
-    keys,degrees=zip(*G.degree().items())           # keys, degree
-    cdf=nx.utils.cumulative_distribution(degrees)   # cdf of degree
-    
+def sign_network_positive_swap(G0, nswap=1, max_tries=100):
+
+    G = copy.deepcopy(G0)
+    n = 0
+    swapcount = 0
+    keys, degrees = zip(*G.degree().items())           # keys, degree
+    cdf = nx.utils.cumulative_distribution(degrees)   # cdf of degree
+
     while swapcount < nswap:
-        (ui,xi)=nx.utils.discrete_sequence(2,cdistribution=cdf)
-        if ui==xi:
-            continue # same source, skip
-        u=keys[ui] # convert index to label
-        x=keys[xi]
+        (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
+        if ui == xi:
+            continue  # same source, skip
+        u = keys[ui]  # convert index to label
+        x = keys[xi]
         # choose target uniformly from neighbors
-        if len(list(G[u]))>0 and len(list(G[x]))>0:
-            v=random.choice(list(G[u]))
-            y=random.choice(list(G[x]))
-            if v==y:
+        if len(list(G[u])) > 0 and len(list(G[x])) > 0:
+            v = random.choice(list(G[u]))
+            y = random.choice(list(G[x]))
+            if v == y:
                 continue
         else:
             continue
-        
-        if (x not in G[u]) and (y not in G[v]) and G[u][v]['weight']==1 and G[x][y]['weight']==1:
-                        if connected==1:                            #判断是否需要保持联通特性，为1的话则需要保持该特性        
+
+        if (x not in G[u]) and (y not in G[v]) and G[u][v]['weight'] == 1 and G[x][y]['weight'] == 1:
+                        if connected == 1:  # 判断是否需要保持联通特性，为1的话则需要保持该特性
                     if not nx.is_connected(G):              #保证网络是全联通的:若网络不是全联通网络，则撤回交换边的操作
                     	G.add_edge(u,v)
                     	G.add_edge(x,y)
