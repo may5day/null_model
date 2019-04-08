@@ -10,7 +10,7 @@ import random
 import copy
 
 
-__all__ = ['judge_error'
+__all__ = ['judge_error',
            'edge_in_community',
            'count_degree_nodes',
            'inner_random_1k',
@@ -24,7 +24,7 @@ __all__ = ['judge_error'
            'inner_community_swap',
            'inter_community_swap',
            'Q_enhense',
-           'Q_weaken', ]
+           'Q_weaken' ]
 
 
 def judge_error(G, n_swap, max_tries, connected):
@@ -307,12 +307,12 @@ def inner_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                             degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
                                 [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
 
-                            D = count_degree_nodes(degree_node_list)
-                            for i in range(len(D)):
+                            dict_degree = count_degree_nodes(degree_node_list)
+                            for i in range(len(dict_degree)):
                                 avcG0 = nx.average_clustering(
-                                    G0, nodes=D.values()[i], weight=None, count_zeros=True)
+                                    G0, nodes=list(dict_degree.values())[i], weight=None, count_zeros=True)
                                 avcG = nx.average_clustering(
-                                    G, nodes=D.values()[i], weight=None, count_zeros=True)
+                                    G, nodes=list(dict_degree.values())[i], weight=None, count_zeros=True)
                                 i += 1
                                 # If the degree-related clustering coefficient changed after scrambling
                                 # withdraw this operation about scrambling.
@@ -656,12 +656,12 @@ def inter_random_25k(G0, node_community, n_swap=1, max_tries=100, connected=1):
                             degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
                                 [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
 
-                            D = count_degree_nodes(degree_node_list)
-                            for i in range(len(D)):
+                            dict_degree = count_degree_nodes(degree_node_list)
+                            for i in range(len(dict_degree)):
                                 avcG0 = nx.average_clustering(
-                                    G0, nodes=D.values()[i], weight=None, count_zeros=True)
+                                    G0, nodes=list(dict_degree.values())[i], weight=None, count_zeros=True)
                                 avcG = nx.average_clustering(
-                                    G, nodes=D.values()[i], weight=None, count_zeros=True)
+                                    G, nodes=list(dict_degree.values())[i], weight=None, count_zeros=True)
                                 i += 1
                                 # If the degree-related clustering coefficient changed after scrambling
                                 # withdraw this operation about scrambling.
