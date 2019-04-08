@@ -10,7 +10,7 @@ import random
 import copy
 
 
-__all__ = ['judge_error'
+__all__ = ['judge_error',
            'count_degree_nodes',  # dict_degree_nodes
            'er_graph',  # ER_model
            'config_model',
@@ -170,7 +170,7 @@ def random_0k(G, n_swap=1, max_tries=100, connected=1):
 
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s).' % n_swap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
     return G
 
@@ -207,7 +207,7 @@ def random_1k(G, n_swap=1, max_tries=100, connected=1):
     while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s).' % n_swap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
         n_try += 1
 
@@ -273,11 +273,12 @@ def random_2k(G, n_swap=1, max_tries=100, connected=1):
     while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s).' % n_swap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
         n_try += 1
 
-        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
+        # make sure the degree distribution unchanged,choose two edges
+        # (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -288,11 +289,12 @@ def random_2k(G, n_swap=1, max_tries=100, connected=1):
 
         # make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # make sure the degree matching characteristic of the nodes remain unchanged
-            if G.degree(v) == G.degree(y): 
+            # make sure the degree matching characteristic of the nodes remain
+            # unchanged
+            if G.degree(v) == G.degree(y):
                 # make sure the new edges are not exist in the original graph
                 if (y not in G[u]) and (v not in G[x]):
-                	# add two new edges
+                        # add two new edges
                     G.add_edge(u, y)
                     G.add_edge(v, x)
                     # delete two old edges
@@ -343,11 +345,12 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
     while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s).' % n_swap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
         n_try += 1
 
-        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
+        # make sure the degree distribution unchanged,choose two edges
+        # (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -357,7 +360,8 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # make sure the degree matching characteristic of the nodes remain unchanged
+            # make sure the degree matching characteristic of the nodes remain
+            # unchanged
             if G.degree(v) == G.degree(y):
                 # make sure the new edges are not exist in the original graph
                 if (y not in G[u]) and (v not in G[x]):
@@ -366,7 +370,8 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
 
                     G.remove_edge(u, v)
                     G.remove_edge(x, y)
-                    # get the degree of four nodes and their neighbor nodes, degree_node_list : [[degree,node]]
+                    # get the degree of four nodes and their neighbor nodes,
+                    # degree_node_list : [[degree,node]]
                     degree_node_list = map(lambda t: (t[1], t[0]), G0.degree(
                         [u, v, x, y] + list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])).items())
                     # get all nodes of each degree :{degree:[node1,node2...]}
@@ -374,11 +379,12 @@ def random_25k(G0, n_swap=1, max_tries=100, connected=1):
 
                     for i in range(len(dict_degree)):
                         avcG0 = nx.average_clustering(
-                            G0, nodes=dict_degree.values()[i], weight=None, count_zeros=True)
+                            G0, nodes=list(dict_degree.values())[i], weight=None, count_zeros=True)
                         avcG = nx.average_clustering(
-                            G, nodes=dict_degree.values()[i], weight=None, count_zeros=True)
+                            G, nodes=list(dict_degree.values())[i], weight=None, count_zeros=True)
                         i += 1
-                    # if the clustering coefficient about dgree changed after scrambling ,withdraw this operation
+                    # if the clustering coefficient about dgree changed after
+                    # scrambling ,withdraw this operation
                     if avcG0 != avcG:
                         G.add_edge(u, v)
                         G.add_edge(x, y)
@@ -432,11 +438,12 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
     while swapcount < n_swap:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s).' % n_swap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
         n_try += 1
 
-        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
+        # make sure the degree distribution unchanged,choose two edges
+        # (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -446,7 +453,8 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
         y = random.choice(list(G[x]))
         # make sure the four nodes are not repeated
         if len(set([u, v, x, y])) == 4:
-            # make sure the degree matching characteristic of the nodes remain unchanged
+            # make sure the degree matching characteristic of the nodes remain
+            # unchanged
             if G.degree(v) == G.degree(y):
                 # make sure the new edges are not exist in the original graph
                 if (y not in G[u]) and (v not in G[x]):
@@ -459,10 +467,12 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
                     # get the set of four nodes and their neighbor nodes
                     node_list = [u, v, x, y] + \
                         list(G[u]) + list(G[v]) + list(G[x]) + list(G[y])
-                    # cal the clustering coefficient of the four nodes in the original and the new graph
+                    # cal the clustering coefficient of the four nodes in the
+                    # original and the new graph
                     avcG0 = nx.clustering(G, nodes=node_list)
                     avcG = nx.clustering(G, nodes=node_list)
-                    # if the clustering coefficient about dgree changed after scrambling ,withdraw this operation
+                    # if the clustering coefficient about dgree changed after
+                    # scrambling ,withdraw this operation
                     if avcG0 != avcG:
                         G.add_edge(u, v)
                         G.add_edge(x, y)
@@ -482,9 +492,9 @@ def random_3k(G0, n_swap=1, max_tries=100, connected=1):
     return G
 
 
-def rich_club_create(G, k=1, n_swap=1, max_tries=100, connected=1): 
+def rich_club_create(G, k=1, n_swap=1, max_tries=100, connected=1):
     """Returns a null model where the rich-club connectivity is preserved.
-    
+
     choose two edges between hubs and non-hubs randomly, if there is no edge between hubs and between non-hubs,
     reconnect links until the times you try reached the max_tries or there are edges between all hubs.
 
@@ -525,7 +535,7 @@ def rich_club_create(G, k=1, n_swap=1, max_tries=100, connected=1):
     while swapcount < n_swap and len(hubs_edges) < len_possible_edges:
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s).' % n_swap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
         n_try += 1
         #  choose two hubs randomly
@@ -566,7 +576,7 @@ def rich_club_create(G, k=1, n_swap=1, max_tries=100, connected=1):
 
 def rich_club_break(G, k=10, n_swap=1, max_tries=100, connected=1):
     """Returns a null model where the rich-club connectivity is not preserved.
-    
+
     choose two edges between hubs and non-hubs randomly, if there is no edge between hubs and non-hubs,
     reconnect links until the times you try reached the max_tries or there are no hub edges or non-hub edges.
 
@@ -672,7 +682,8 @@ def assort_mixing(G, k=10, n_swap=1, max_tries=100, connected=1):
     while swapcount < n_swap:
         n_try += 1
 
-        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
+        # make sure the degree distribution unchanged,choose two edges
+        # (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -702,7 +713,7 @@ def assort_mixing(G, k=10, n_swap=1, max_tries=100, connected=1):
                     continue
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s).' % n_swap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
         swapcount += 1
     return G
@@ -743,7 +754,8 @@ def disassort_mixing(G, k=10, n_swap=1, max_tries=100, connected=1):
     while swapcount < n_swap:
         n_try += 1
 
-        # make sure the degree distribution unchanged,choose two edges (u-v,x-y) randomly
+        # make sure the degree distribution unchanged,choose two edges
+        # (u-v,x-y) randomly
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue
@@ -773,7 +785,7 @@ def disassort_mixing(G, k=10, n_swap=1, max_tries=100, connected=1):
                     continue
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s).' % n_swap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
         swapcount += 1
     return G
@@ -817,7 +829,7 @@ def random_1kd(G, n_swap=1, max_tries=100):
             swapcount += 1
         if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                 n_try + 'before desired swaps achieved (%s).' % n_swap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
         n_try += 1
     return G
