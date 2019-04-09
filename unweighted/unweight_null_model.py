@@ -11,8 +11,8 @@ import copy
 
 
 __all__ = ['judge_error',
-           'count_degree_nodes',  # dict_degree_nodes
-           'er_graph',  # ER_model
+           'count_degree_nodes',
+           'er_graph',
            'config_model',
            'random_0k',
            'random_1k',
