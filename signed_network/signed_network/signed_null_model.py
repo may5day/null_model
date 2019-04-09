@@ -5,19 +5,45 @@ import copy
 + : weight=1
 - : weight=2
 """
+__all__ = ['snd_pos_swap',
+           'snd_neg_swap',
+           'snd_sign_swap',
+           'snd_full_swap',
+           'snd_swap',
+           'sn_pos_swap',
+           'sn_neg_swap',
+           'sn_sign_swap',
+           'sn_full_swap']
 
 
-def snd_pos_swap(G0, nswap=1, max_tries=100):
-    # Instead of choosing uniformly at random from a generated edge list,
-    # this algorithm chooses nonuniformly from the set of nodes with
-    # probability weighted by degree.
-    G = copy.deepcopy(G0)
-    n = 0
+def snd_pos_swap(G, n_swap=1, max_tries=100):
+    """Returns a 1K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G : directed graph
+    n_swap : int (default = 1)
+        Number of double-edge swaps to perform
+    max_tries : int (default = 100)
+        Maximum number of attempts to swap edges
+
+    Notes
+    -----
+    Instead of choosing uniformly at random from a generated edge list,
+    this algorithm chooses nonuniformly from the set of nodes with probability weighted by degree.
+    The out degree of each node remains unchanged after swap.
+
+    See Also
+    --------
+    sn_pos_swap
+
+    """
+    n_try = 0
     swapcount = 0
-    keys, degrees = zip(*G.degree().items())  # keys, degree
+    keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
-    while swapcount < nswap:
+    while swapcount < n_swap:
         #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
@@ -45,27 +71,45 @@ def snd_pos_swap(G0, nswap=1, max_tries=100):
                 G.remove_edge(u, v)
                 G.remove_edge(x, y)
                 swapcount += 1
-        if n >= max_tries:
+        if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                  n + 'before desired swaps achieved (%s).' % nswap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
-        if n % 100000 == 0:
-            print('swap times=', swapcount, 'try times=', n)
+        n_try += 1
+        if n_try % 100000 == 0:
+            print('swap times=', swapcount, 'try times=', n_try)
     return G
 
 
-def snd_neg_swap(G0, nswap=1, max_tries=100):
-    # Instead of choosing uniformly at random from a generated edge list,
-    # this algorithm chooses nonuniformly from the set of nodes with
-    # probability weighted by degree.
-    G = copy.deepcopy(G0)
-    n = 0
+def snd_neg_swap(G, n_swap=1, max_tries=100):
+    """Returns a 1K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G : directed graph
+    n_swap : int (default = 1)
+        Number of double-edge swaps to perform
+    max_tries : int (default = 100)
+        Maximum number of attempts to swap edges
+
+    Notes
+    -----
+    Instead of choosing uniformly at random from a generated edge list,
+    this algorithm chooses nonuniformly from the set of nodes with probability weighted by degree.
+    The in degree of each node remains unchanged after swap.
+
+    See Also
+    --------
+    sn_neg_swap
+
+    """
+
+    n_try = 0
     swapcount = 0
-    keys, degrees = zip(*G.degree().items())  # keys, degree
+    keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
-    while swapcount < nswap:
+    while swapcount < n_swap:
         #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
@@ -93,27 +137,45 @@ def snd_neg_swap(G0, nswap=1, max_tries=100):
                 G.remove_edge(u, v)
                 G.remove_edge(x, y)
                 swapcount += 1
-        if n >= max_tries:
+        if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                  n + 'before desired swaps achieved (%s).' % nswap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
-        if n % 100000 == 0:
-            print('swap times=', swapcount, 'try times=', n)
+        n_try += 1
+        if n_try % 100000 == 0:
+            print('swap times=', swapcount, 'try times=', n_try)
     return G
 
 
-def snd_sign_swap(G0, nswap=1, max_tries=100):
-    # Instead of choosing uniformly at random from a generated edge list,
-    # this algorithm chooses nonuniformly from the set of nodes with
-    # probability weighted by degree.
-    G = copy.deepcopy(G0)
-    n = 0
+def snd_sign_swap(G, n_swap=1, max_tries=100):
+    """Returns a 1K null model
+
+    Parameters
+    ----------
+    G : directed graph
+    n_swap : int (default = 1)
+        Number of double-edge swaps to perform
+    max_tries : int (default = 100)
+        Maximum number of attempts to swap edges
+
+    Notes
+    -----
+    Instead of choosing uniformly at random from a generated edge list,
+    this algorithm chooses nonuniformly from the set of nodes with probability weighted by degree.
+    The topological structure of this network remains unchanged after scrambling.
+
+    See Also
+    --------
+    sn_sign_swap
+
+    """
+
+    n_try = 0
     swapcount = 0
-    keys, degrees = zip(*G.degree().items())  # keys, degree
+    keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
-    while swapcount < nswap:
+    while swapcount < n_swap:
         #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
@@ -138,27 +200,45 @@ def snd_sign_swap(G0, nswap=1, max_tries=100):
                 x][y]['weight'], G[u][v]['weight']
             if G[u][v]['weight'] != G[x][y]['weight']:
                 swapcount += 1
-        if n >= max_tries:
+        if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                  n + 'before desired swaps achieved (%s).' % nswap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
-        if n % 100000 == 0:
-            print('swap times=', swapcount, 'try times=', n)
+        n_try += 1
+        if n_try % 100000 == 0:
+            print('swap times=', swapcount, 'try times=', n_try)
     return G
 
 
-def snd_full_swap(G0, nswap=1, max_tries=100):
-    # Instead of choosing uniformly at random from a generated edge list,
-    # this algorithm chooses nonuniformly from the set of nodes with
-    # probability weighted by degree.
-    G = copy.deepcopy(G0)
+def snd_full_swap(G, n_swap=1, max_tries=100):
+    """Returns a 1K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G : directed graph
+    n_swap : int (default = 1)
+        Number of double-edge swaps to perform
+    max_tries : int (default = 100)
+        Maximum number of attempts to swap edges
+
+    Notes
+    -----
+    Instead of choosing uniformly at random from a generated edge list,
+    this algorithm chooses nonuniformly from the set of nodes with probability weighted by degree.
+    The degree of each node and topological structure of this network changed after swap.
+
+    See Also
+    --------
+    sn_full_swap
+
+    """
+
     n = 0
     swapcount = 0
-    keys, degrees = zip(*G.degree().items())  # keys, degree
+    keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
-    while swapcount < nswap:
+    while swapcount < n_swap:
         #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
@@ -186,27 +266,41 @@ def snd_full_swap(G0, nswap=1, max_tries=100):
                 G.remove_edge(u, v)
                 G.remove_edge(x, y)
                 swapcount += 1
-        if n >= max_tries:
+        if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                  n + 'before desired swaps achieved (%s).' % nswap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
-        if n % 100000 == 0:
-            print('swap times=', swapcount, 'try times=', n)
+        n_try += 1
+        if n_try % 100000 == 0:
+            print('swap times=', swapcount, 'try times=', n_try)
     return G
 
 
-def snd_swap(G0, nswap=1, max_tries=100, paradox='false'):
-    # Instead of choosing uniformly at random from a generated edge list,
-    # this algorithm chooses nonuniformly from the set of nodes with
-    # probability weighted by degree.
-    G = copy.deepcopy(G0)
-    n = 0
+def snd_swap(G, n_swap=1, max_tries=100, paradox='false'):
+    """Returns a 1K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G : directed graph
+    n_swap : int (default = 1)
+        Number of double-edge swaps to perform
+    max_tries : int (default = 100)
+        Maximum number of attempts to swap edges
+
+    Notes
+    -----
+    Instead of choosing uniformly at random from a generated edge list,
+    this algorithm chooses nonuniformly from the set of nodes with probability weighted by degree.
+    The degree of each node remains unchanged after swap.
+
+    """
+
+    n_try = 0
     swapcount = 0
-    keys, degrees = zip(*G.degree().items())  # keys, degree
+    keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
-    while swapcount < nswap:
+    while swapcount < n_swap:
         #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
@@ -233,25 +327,45 @@ def snd_swap(G0, nswap=1, max_tries=100, paradox='false'):
             if G[u][v]['weight'] != G[x][y]['weight']:
                 swapcount += 1
 
-        if n >= max_tries:
+        if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                  n + 'before desired swaps achieved (%s).' % nswap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
-        if n % 1000000 == 0:
-            print('swap times=', swapcount, 'try times=', n)
+        n_try += 1
+        if n_try % 1000000 == 0:
+            print('swap times=', swapcount, 'try times=', n_try)
     return G
 
 
-def sn_pos_swap(G0, nswap=1, max_tries=100):
+def sn_pos_swap(G, n_swap=1, max_tries=100):
+    """Returns a 1K null model beased on random reconnection algorithm
 
-    G = copy.deepcopy(G0)
-    n = 0
+    Parameters
+    ----------
+    G : undirected graph
+    n_swap : int (default = 1)
+        Number of double-edge swaps to perform
+    max_tries : int (default = 100)
+        Maximum number of attempts to swap edges
+
+    Notes
+    -----
+    Instead of choosing uniformly at random from a generated edge list,
+    this algorithm chooses nonuniformly from the set of nodes with probability weighted by degree.
+    The degree of each node remains unchanged after swap.
+
+    See Also
+    --------
+    snd_pos_swap
+
+    """
+
+    n_try = 0
     swapcount = 0
-    keys, degrees = zip(*G.degree().items())           # keys, degree
+    keys, degrees = zip(*G.degree().items())         
     cdf = nx.utils.cumulative_distribution(degrees)   # cdf of degree
 
-    while swapcount < nswap:
+    while swapcount < n_swap:
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
         if ui == xi:
             continue  # same source, skip
@@ -281,27 +395,45 @@ def sn_pos_swap(G0, nswap=1, max_tries=100):
             G.remove_edge(x, y)
             swapcount += 1
 
-        if n >= max_tries:
+        if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                  n + 'before desired swaps achieved (%s).' % nswap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
-        if n % 1000000 == 0:
-            print('swap times=', swapcount, 'try times=', n)
+        n_try += 1
+        if n_try % 1000000 == 0:
+            print('swap times=', swapcount, 'try times=', n_try)
     return G
 
 
-def sn_neg_swap(G0, nswap=1, max_tries=100):
-    # Instead of choosing uniformly at random from a generated edge list,
-    # this algorithm chooses nonuniformly from the set of nodes with
-    # probability weighted by degree.
-    G = copy.deepcopy(G0)
-    n = 0
+def sn_neg_swap(G, n_swap=1, max_tries=100):
+    """Returns a 1K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G : directed graph
+    n_swap : int (default = 1)
+        Number of double-edge swaps to perform
+    max_tries : int (default = 100)
+        Maximum number of attempts to swap edges
+
+    Notes
+    -----
+    Instead of choosing uniformly at random from a generated edge list,
+    this algorithm chooses nonuniformly from the set of nodes with probability weighted by degree.
+    The degree of each node remains unchanged after swap.
+
+    See Also
+    --------
+    snd_neg_swap
+
+    """
+
+    n_try = 0
     swapcount = 0
-    keys, degrees = zip(*G.degree().items())  # keys, degree
+    keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
-    while swapcount < nswap:
+    while swapcount < n_swap:
         #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
@@ -326,27 +458,45 @@ def sn_neg_swap(G0, nswap=1, max_tries=100):
             G.remove_edge(x, y)
             swapcount += 1
 
-        if n >= max_tries:
+        if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                  n + 'before desired swaps achieved (%s).' % nswap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
-        if n % 1000000 == 0:
-            print('swap times=', swapcount, 'try times=', n)
+        n_try += 1
+        if n_try % 1000000 == 0:
+            print('swap times=', swapcount, 'try times=', n_try)
     return G
 
 
-def sn_sign_swap(G0, nswap=1, max_tries=100):
-    # Instead of choosing uniformly at random from a generated edge list,
-    # this algorithm chooses nonuniformly from the set of nodes with
-    # probability weighted by degree.
-    G = copy.deepcopy(G0)
-    n = 0
+def sn_sign_swap(G, n_swap=1, max_tries=100):
+    """Returns a 1K null model
+
+    Parameters
+    ----------
+    G : directed graph
+    n_swap : int (default = 1)
+        Number of double-edge swaps to perform
+    max_tries : int (default = 100)
+        Maximum number of attempts to swap edges
+
+    Notes
+    -----
+    Instead of choosing uniformly at random from a generated edge list,
+    this algorithm chooses nonuniformly from the set of nodes with probability weighted by degree.
+    The topological structure of this network remains unchanged after scrambling.
+
+    See Also
+    --------
+    snd_sign_swap
+
+    """
+
+    n_try = 0
     swapcount = 0
-    keys, degrees = zip(*G.degree().items())  # keys, degree
+    keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
-    while swapcount < nswap:
+    while swapcount < n_swap:
         #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
@@ -366,27 +516,45 @@ def sn_sign_swap(G0, nswap=1, max_tries=100):
             if G[u][v]['weight'] != G[x][y]['weight']:
                 swapcount += 1
 
-        if n >= max_tries:
+        if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                  n + 'before desired swaps achieved (%s).' % nswap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
-        if n % 1000000 == 0:
-            print('swap times=', swapcount, 'try times=', n)
+        n_try += 1
+        if n_try % 1000000 == 0:
+            print('swap times=', swapcount, 'try times=', n_try)
     return G
 
 
-def sn_full_swap(G0, nswap=1, max_tries=100):
-    # Instead of choosing uniformly at random from a generated edge list,
-    # this algorithm chooses nonuniformly from the set of nodes with
-    # probability weighted by degree.
-    G = copy.deepcopy(G0)
-    n = 0
+def sn_full_swap(G, n_swap=1, max_tries=100):
+    """Returns a 1K null model beased on random reconnection algorithm
+
+    Parameters
+    ----------
+    G : directed graph
+    n_swap : int (default = 1)
+        Number of double-edge swaps to perform
+    max_tries : int (default = 100)
+        Maximum number of attempts to swap edges
+
+    Notes
+    -----
+    Instead of choosing uniformly at random from a generated edge list,
+    this algorithm chooses nonuniformly from the set of nodes with probability weighted by degree.
+    The degree of each node and topological structure of this network changed after swap.
+
+    See Also
+    --------
+    snd_full_swap
+
+    """
+
+    n_try = 0
     swapcount = 0
-    keys, degrees = zip(*G.degree().items())  # keys, degree
+    keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
-    while swapcount < nswap:
+    while swapcount < n_swap:
         #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
@@ -408,11 +576,11 @@ def sn_full_swap(G0, nswap=1, max_tries=100):
                 G.remove_edge(x, y)
                 swapcount += 1
 
-        if n >= max_tries:
+        if n_try >= max_tries:
             print('Maximum number of swap attempts (%s) exceeded ' %
-                  n + 'before desired swaps achieved (%s).' % nswap)
+                  n_try + 'before desired swaps achieved (%s).' % n_swap)
             break
-        n += 1
-        if n % 1000000 == 0:
-            print('swap times=', swapcount, 'try times=', n)
+        n_try += 1
+        if n_try % 1000000 == 0:
+            print('swap times=', swapcount, 'try times=', n_try)
     return G
