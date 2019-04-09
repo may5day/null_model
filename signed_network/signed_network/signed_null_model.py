@@ -38,13 +38,14 @@ def snd_pos_swap(G, n_swap=1, max_tries=100):
     sn_pos_swap
 
     """
+    # Number of attempts to swap
     n_try = 0
+    # Number of effective swaps
     swapcount = 0
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
     while swapcount < n_swap:
-        #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -104,13 +105,14 @@ def snd_neg_swap(G, n_swap=1, max_tries=100):
 
     """
 
+    # Number of attempts to swap
     n_try = 0
+    # Number of effective swaps
     swapcount = 0
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
     while swapcount < n_swap:
-        #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -170,13 +172,14 @@ def snd_sign_swap(G, n_swap=1, max_tries=100):
 
     """
 
+    # Number of attempts to swap
     n_try = 0
+    # Number of effective swaps
     swapcount = 0
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
     while swapcount < n_swap:
-        #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -233,13 +236,14 @@ def snd_full_swap(G, n_swap=1, max_tries=100):
 
     """
 
-    n = 0
+    # Number of attempts to swap
+    n_try = 0
+    # Number of effective swaps
     swapcount = 0
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
     while swapcount < n_swap:
-        #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -295,13 +299,14 @@ def snd_swap(G, n_swap=1, max_tries=100, paradox='false'):
 
     """
 
+    # Number of attempts to swap
     n_try = 0
+    # Number of effective swaps
     swapcount = 0
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
     while swapcount < n_swap:
-        #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -360,7 +365,9 @@ def sn_pos_swap(G, n_swap=1, max_tries=100):
 
     """
 
+    # Number of attempts to swap
     n_try = 0
+    # Number of effective swaps
     swapcount = 0
     keys, degrees = zip(*G.degree().items())         
     cdf = nx.utils.cumulative_distribution(degrees)   # cdf of degree
@@ -428,13 +435,14 @@ def sn_neg_swap(G, n_swap=1, max_tries=100):
 
     """
 
+    # Number of attempts to swap
     n_try = 0
+    # Number of effective swaps
     swapcount = 0
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
     while swapcount < n_swap:
-        #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -491,13 +499,14 @@ def sn_sign_swap(G, n_swap=1, max_tries=100):
 
     """
 
+    # Number of attempts to swap
     n_try = 0
+    # Number of effective swaps
     swapcount = 0
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
     while swapcount < n_swap:
-        #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
@@ -549,13 +558,14 @@ def sn_full_swap(G, n_swap=1, max_tries=100):
 
     """
 
+    # Number of attempts to swap
     n_try = 0
+    # Number of effective swaps
     swapcount = 0
     keys, degrees = zip(*G.degree().items())
     cdf = nx.utils.cumulative_distribution(degrees)  # cdf of degree
 
     while swapcount < n_swap:
-        #        if random.random() < 0.5: continue # trick to avoid periodicities?
         # pick two random edges without creating edge list
         # choose source node indices from discrete distribution
         (ui, xi) = nx.utils.discrete_sequence(2, cdistribution=cdf)
